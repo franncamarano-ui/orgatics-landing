@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rastrea tu pedido — Orgatics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #0a5945; --green-light: #0d7a60; --purple: #6d388b;
+      --cream: #f5f1eb; --cream-dark: #ede8e0; --black: #121212; --black-soft: #1a1a1a;
+      --success: #00b67a; --white: #ffffff; --border: #dbdbdb; --muted: #6b6b6b;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+
+    /* ── ANNOUNCE BAR ── */
+    .announce-bar { background: var(--green); color: var(--white); text-align: center; padding: 10px 16px; font-size: 13px; font-weight: 500; }
+    .announce-bar a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── NAV ── */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 5%; height: 64px; gap: 16px; }
+    .nav-left { display: flex; align-items: center; }
+    .nav-logo { font-family: var(--font-display); font-size: 22px; color: var(--green); text-decoration: none; letter-spacing: -0.01em; justify-self: center; white-space: nowrap; }
+    .nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--black); text-decoration: none; opacity: 0.72; padding: 6px 12px; border-radius: 6px; transition: opacity 0.2s, background 0.2s; }
+    .nav-links a:hover { opacity: 1; background: #f5f5f5; }
+    .nav-cta { background: var(--green) !important; color: var(--white) !important; padding: 8px 18px !important; border-radius: 6px; font-size: 13px !important; font-weight: 600 !important; opacity: 1 !important; }
+    .nav-cta:hover { background: var(--green-light) !important; }
+    .nav-active { background: var(--cream) !important; color: var(--green) !important; opacity: 1 !important; font-weight: 700 !important; }
+    .nav-icon-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; position: relative; }
+    .nav-icon-btn:hover { background: var(--cream); }
+    .nav-icon-btn svg { width: 18px; height: 18px; stroke: var(--black); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .cart-count { position: absolute; top: -5px; right: -5px; width: 17px; height: 17px; background: var(--green); color: var(--white); border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--black); border-radius: 2px; }
+    .mobile-menu { display: none; }
+    .mobile-menu-overlay { display: none; }
+
+    /* ── SEARCH ── */
+    .search-wrapper { position: relative; }
+    .search-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12); padding: 12px; z-index: 200; }
+    .search-dropdown.open { display: block; }
+    .search-dropdown input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: var(--font-body); font-size: 14px; outline: none; }
+    .search-dropdown input:focus { border-color: var(--green); }
+
+    /* ── CART ── */
+    .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 300; }
+    .cart-overlay.open { display: block; }
+    .cart-drawer { position: fixed; top: 0; right: -400px; width: 360px; height: 100vh; background: var(--white); box-shadow: -8px 0 40px rgba(0,0,0,0.15); z-index: 301; display: flex; flex-direction: column; transition: right 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .cart-drawer.open { right: 0; }
+    .cart-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .cart-drawer-header h3 { font-family: var(--font-display); font-size: 18px; }
+    .cart-close { width: 32px; height: 32px; border: none; background: #f5f5f5; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .cart-close:hover { background: #ebebeb; }
+    .cart-drawer-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; color: var(--muted); }
+    .cart-drawer-body .empty-icon { font-size: 48px; opacity: 0.4; }
+    .cart-drawer-body p { font-size: 14px; text-align: center; line-height: 1.6; }
+    .cart-drawer-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
+    .cart-checkout-btn { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 8px; padding: 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; cursor: pointer; opacity: 0.5; }
+
+    /* ── TRACKING PAGE ── */
+    .tracking-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 64px 5% 80px;
+    }
+
+    .tracking-header { text-align: center; margin-bottom: 48px; }
+    .tracking-header .icon-wrap {
+      width: 72px; height: 72px;
+      background: var(--cream);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+    .tracking-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 4vw, 36px);
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .tracking-header p { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+    /* Search form */
+    .tracking-form {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    }
+    .tracking-form label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+    .tracking-form .field-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tracking-form input {
+      flex: 1;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .tracking-form input:focus { border-color: var(--green); }
+    .tracking-form input::placeholder { color: #bbb; }
+    .btn-track {
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 13px 24px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-track:hover { background: var(--green-light); }
+    .tracking-form .divider-or {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .tracking-form .divider-or::before,
+    .tracking-form .divider-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .tracking-form .email-row { display: flex; flex-direction: column; gap: 6px; }
+    .tracking-form .hint { font-size: 12px; color: var(--muted); margin-top: -8px; }
+    .btn-shopify-track {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 13px 20px; margin-top: 4px;
+      background: var(--black-soft); color: var(--white);
+      border: none; border-radius: 8px; font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-shopify-track:hover { background: #2a2a2a; }
+
+    /* ── RESULT PANEL ── */
+    .tracking-result { display: none; }
+    .tracking-result.show { display: block; }
+
+    .result-header {
+      background: var(--green);
+      color: var(--white);
+      border-radius: 14px 14px 0 0;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .result-header .order-info h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 4px; }
+    .result-header .order-info p { font-size: 13px; opacity: 0.8; }
+    .status-pill {
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      border-radius: 50px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #7fff7f; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .result-body {
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      overflow: hidden;
+    }
+
+    /* Progress tracker */
+    .progress-section { padding: 32px 28px 24px; }
+    .progress-section h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 28px; }
+
+    .steps {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      width: 2px;
+      height: calc(100% - 8px);
+      background: var(--border);
+      z-index: 0;
+    }
+    .step.done:not(:last-child)::after { background: var(--green); }
+    .step.active:not(:last-child)::after { background: linear-gradient(to bottom, var(--green), var(--border)); }
+
+    .step-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      z-index: 1;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .step.done .step-icon { background: var(--green); }
+    .step.active .step-icon { background: var(--green); box-shadow: 0 0 0 4px rgba(10,89,69,0.15); }
+    .step.pending .step-icon { background: #e8e8e8; }
+
+    .step-content { padding: 4px 0 28px; flex: 1; }
+    .step:last-child .step-content { padding-bottom: 0; }
+    .step-content strong { display: block; font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+    .step.pending .step-content strong { color: var(--muted); }
+    .step-content span { font-size: 12px; color: var(--muted); }
+    .step-content .step-date { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* Order details */
+    .order-details {
+      border-top: 1px solid var(--border);
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .detail-group h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+    .detail-group p { font-size: 14px; color: var(--black); line-height: 1.5; }
+
+    /* Product in order */
+    .order-product {
+      border-top: 1px solid var(--border);
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .order-product .prod-thumb {
+      width: 56px; height: 56px;
+      background: var(--cream);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .order-product .prod-info strong { font-size: 14px; display: block; margin-bottom: 3px; }
+    .order-product .prod-info span { font-size: 12px; color: var(--muted); }
+    .order-product .prod-price { margin-left: auto; font-size: 15px; font-weight: 700; }
+
+    /* Carrier info */
+    .carrier-section {
+      border-top: 1px solid var(--border);
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .carrier-info { display: flex; align-items: center; gap: 12px; }
+    .carrier-logo { width: 48px; height: 48px; background: var(--cream); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .carrier-info h5 { font-size: 14px; font-weight: 700; }
+    .carrier-info p { font-size: 12px; color: var(--muted); }
+    .btn-carrier { border: 1.5px solid var(--green); color: var(--green); background: transparent; border-radius: 8px; padding: 9px 18px; font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-carrier:hover { background: var(--green); color: var(--white); }
+
+    /* Error state */
+    .tracking-error {
+      display: none;
+      background: #fff3f3;
+      border: 1px solid #ffcdd2;
+      border-radius: 12px;
+      padding: 20px 24px;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .tracking-error.show { display: flex; }
+    .tracking-error .err-icon { font-size: 24px; flex-shrink: 0; }
+    .tracking-error p { font-size: 14px; color: #c62828; line-height: 1.5; }
+
+    /* FAQ section */
+    .faq-section { margin-top: 48px; }
+    .faq-section h2 { font-family: var(--font-display); font-size: 22px; margin-bottom: 20px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; cursor: pointer;
+      font-size: 14px; font-weight: 600;
+      list-style: none;
+      gap: 12px;
+    }
+    .faq-q::-webkit-details-marker { display: none; }
+    .faq-q::after { content: '+'; font-size: 20px; font-weight: 300; color: var(--muted); flex-shrink: 0; transition: transform 0.2s; }
+    details[open] .faq-q::after { transform: rotate(45deg); }
+    .faq-a { padding: 0 0 16px; font-size: 13px; color: #555; line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--black-soft); color: rgba(255,255,255,0.75); padding: 64px 5% 40px; }
+    .footer-top { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.5fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .footer-col h4 { color: var(--white); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-col p { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+    .footer-logo { font-family: var(--font-display); font-size: 22px; color: var(--white); margin-bottom: 12px; display: block; }
+    .footer-form { display: flex; flex-direction: column; gap: 10px; }
+    .footer-form input { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 11px 14px; font-family: var(--font-body); font-size: 13px; color: var(--white); outline: none; }
+    .footer-form input::placeholder { color: rgba(255,255,255,0.35); }
+    .footer-form button { background: var(--white); color: var(--black); border: none; border-radius: 6px; padding: 11px; font-family: var(--font-body); font-size: 13px; font-weight: 700; cursor: pointer; }
+    .footer-bottom { max-width: 1120px; margin: 32px auto 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.35); }
+    .footer-bottom .legal-links { display: flex; gap: 20px; }
+    .footer-bottom .legal-links a { font-size: 11px; color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-bottom .legal-links a:hover { color: rgba(255,255,255,0.75); }
+    .disclaimer-bar { max-width: 1120px; margin: 24px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .disclaimer-bar p { font-size: 11px; color: rgba(255,255,255,0.28); line-height: 1.7; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { grid-template-columns: auto 1fr auto; padding: 0 16px; gap: 0; }
+      .nav-left { display: none; }
+      .nav-logo { display: block; text-align: center; font-size: 20px; }
+      .nav-hamburger { display: flex; order: -1; }
+      .tracking-form .field-group { flex-direction: column; }
+      .btn-track { width: 100%; }
+      .order-details { grid-template-columns: 1fr; gap: 14px; }
+      .carrier-section { flex-direction: column; align-items: flex-start; }
+      .result-header { flex-direction: column; align-items: flex-start; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      /* Menú móvil con animación slide */
+      .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        position: fixed; top: 0; left: 0; width: 80vw; max-width: 300px; height: 100vh;
+        background: var(--white); z-index: 400; padding: 24px 20px;
+        box-shadow: 4px 0 32px rgba(0,0,0,0.15);
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        pointer-events: none;
+      }
+      .mobile-menu.open { transform: translateX(0); pointer-events: auto; }
+      .mobile-menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 399; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+      .mobile-menu-overlay.open { display: block; opacity: 1; pointer-events: auto; }
+      .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+      .mobile-menu-header .logo { font-family: var(--font-display); font-size: 20px; color: var(--green); }
+      .mobile-menu-close { width: 32px; height: 32px; background: #f5f5f5; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+      .mobile-menu ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+      .mobile-menu ul li a { display: block; padding: 13px 14px; font-size: 16px; font-weight: 500; color: var(--black); text-decoration: none; border-radius: 8px; }
+      .mobile-menu ul li a:hover { background: var(--cream); }
+      .mobile-menu ul li a.cta-mobile { margin-top: 12px; background: var(--green); color: var(--white); text-align: center; font-weight: 700; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announce-bar">
+    🚀 Únete gratis hoy &mdash; Acceso inmediato a la primera entrega &nbsp;|&nbsp; <a href="index.html">Suscríbete ahora →</a>
+  </div>
+
+  <nav>
+    <div class="nav-left">
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html">Catálogo</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="rastreo.html" class="nav-active">Rastrea tu producto</a></li>
+      </ul>
+    </div>
+    <a href="index.html" class="nav-logo">Orgatics</a>
+    <div class="nav-right">
+      <div class="search-wrapper">
+        <button class="nav-icon-btn" aria-label="Buscar" onclick="document.getElementById('search-dropdown').classList.toggle('open')">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+        </button>
+        <div class="search-dropdown" id="search-dropdown">
+          <input type="text" placeholder="Buscar..." />
+        </div>
+      </div>
+      <button class="nav-icon-btn" aria-label="Carrito" onclick="openCart()">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </button>
+      <div class="nav-hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="logo">Orgatics</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Catálogo</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="rastreo.html">Rastrea tu producto</a></li>
+      <li><a href="index.html#hero" class="cta-mobile">Suscribirse gratis →</a></li>
+    </ul>
+  </div>
+
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Tu Carrito</h3>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-drawer-body">
+      <div class="empty-icon">🛍️</div>
+      <p>Tu carrito está vacío.</p>
+    </div>
+    <div class="cart-drawer-footer">
+      <button class="cart-checkout-btn">Ir al checkout →</button>
+    </div>
+  </div>
+
+  <!-- TRACKING CONTENT -->
+  <div class="tracking-wrapper">
+
+    <div class="tracking-header">
+      <div class="icon-wrap">📦</div>
+      <h1>Rastrea tu pedido</h1>
+      <p>Ingresa tu número de pedido o correo electrónico para ver el estado de tu envío en tiempo real.</p>
+    </div>
+
+    <!-- FORM -->
+    <div class="tracking-form">
+      <label for="order-number">Número de pedido</label>
+      <div class="field-group">
+        <input type="text" id="order-number" placeholder="Ej. #1234" />
+        <button class="btn-track" onclick="trackOrder()">Rastrear</button>
+      </div>
+      <p class="hint">Lo encontrarás en el correo de confirmación de tu compra.</p>
+
+      <div class="divider-or">o</div>
+
+      <div class="email-row">
+        <label for="order-email">Correo electrónico del pedido</label>
+        <input type="email" id="order-email" placeholder="tucorreo@ejemplo.com" style="margin-bottom:6px;" />
+        <p class="hint">Buscaremos todos los pedidos asociados a tu correo.</p>
+      </div>
+
+      <div class="divider-or" style="margin-top:16px;">también puedes</div>
+
+      <a href="https://tryorgatics.myshopify.com/apps/order-lookup" target="_blank" class="btn-shopify-track">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Ver estado oficial en Shopify →
+      </a>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div class="tracking-error" id="tracking-error">
+      <span class="err-icon">⚠️</span>
+      <p>No encontramos ningún pedido con ese número o correo. Verifica los datos e intenta nuevamente. Si el problema persiste, <a href="contacto.html" style="color:var(--green);font-weight:600;">contáctanos</a>.</p>
+    </div>
+
+    <!-- RESULT PANEL (hidden by default, shown after search) -->
+    <div class="tracking-result" id="tracking-result">
+
+      <div class="result-header">
+        <div class="order-info">
+          <h3 id="result-order-id">Pedido #ORG-2024-00142</h3>
+          <p id="result-date">Realizado el 15 de mayo de 2026 · 1 artículo</p>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span id="result-status">En camino</span>
+        </div>
+      </div>
+
+      <div class="result-body">
+
+        <!-- Progress steps -->
+        <div class="progress-section">
+          <h4>Estado del envío</h4>
+          <div class="steps">
+
+            <div class="step done">
+              <div class="step-icon">✓</div>
+              <div class="step-content">
+                <strong>Pedido confirmado</strong>
+                <span>Tu pago fue procesado correctamente.</span>
+                <div class="step-date">15 may 2026 · 10:32 AM</div>
+              </div>
+            </div>
+
+            <div class="step done">
+              <div class="step-icon">✓</div>
+              <div class="step-content">
+                <strong>Preparando tu pedido</strong>
+                <span>El equipo de almacén ha empacado tu producto.</span>
+                <div class="step-date">16 may 2026 · 08:15 AM</div>
+              </div>
+            </div>
+
+            <div class="step active">
+              <div class="step-icon">🚚</div>
+              <div class="step-content">
+                <strong>En camino</strong>
+                <span>Tu paquete está en tránsito hacia tu dirección.</span>
+                <div class="step-date">17 may 2026 · 06:48 AM — En ruta</div>
+              </div>
+            </div>
+
+            <div class="step pending">
+              <div class="step-icon">🏠</div>
+              <div class="step-content">
+                <strong>Entregado</strong>
+                <span>Estimado: 19 – 21 de mayo de 2026</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Product in order -->
+        <div class="order-product">
+          <div class="prod-thumb">🌿</div>
+          <div class="prod-info">
+            <strong>Aceite de Orégano y Semilla Negra Orgáticos</strong>
+            <span>60 cápsulas · Qty: 1</span>
+          </div>
+          <span class="prod-price">$44.95</span>
+        </div>
+
+        <!-- Order details -->
+        <div class="order-details">
+          <div class="detail-group">
+            <h5>Dirección de envío</h5>
+            <p id="result-address">Calle Principal 123<br>Buenos Aires, Argentina</p>
+          </div>
+          <div class="detail-group">
+            <h5>Método de envío</h5>
+            <p>Envío estándar internacional<br><strong>Gratis</strong></p>
+          </div>
+          <div class="detail-group">
+            <h5>Número de seguimiento</h5>
+            <p id="result-tracking-num" style="font-family:monospace;font-size:13px;letter-spacing:0.05em;">1Z999AA10123456784</p>
+          </div>
+          <div class="detail-group">
+            <h5>Total del pedido</h5>
+            <p><strong>$44.95</strong> <span style="font-size:12px;color:var(--muted);">IVA incluido</span></p>
+          </div>
+        </div>
+
+        <!-- Carrier -->
+        <div class="carrier-section">
+          <div class="carrier-info">
+            <div class="carrier-logo">📮</div>
+            <div>
+              <h5>UPS Express International</h5>
+              <p>Transportista asignado · Estimado 3-5 días hábiles</p>
+            </div>
+          </div>
+          <button class="btn-carrier" onclick="window.open('https://www.ups.com/track','_blank')">Ver en UPS →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <h2>Preguntas frecuentes sobre envíos</h2>
+
+      <details class="faq-item">
+        <summary class="faq-q">¿Cuánto tarda en llegar mi pedido?</summary>
+        <p class="faq-a">El tiempo estándar de entrega es de 5 a 10 días hábiles para envíos internacionales. Los pedidos dentro de Estados Unidos suelen llegar en 2 a 5 días hábiles. Una vez que tu pedido es despachado, recibirás un correo con el número de seguimiento.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">¿Dónde encuentro mi número de pedido?</summary>
+        <p class="faq-a">Tu número de pedido está en el correo de confirmación que te enviamos al momento de la compra. Tiene el formato ORG-XXXX-XXXXX. También puedes buscarlo iniciando sesión en tu cuenta de Orgatics.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Mi pedido dice "En camino" pero ya pasaron muchos días</summary>
+        <p class="faq-a">En algunas ocasiones los envíos internacionales pueden demorarse en aduanas. Si han pasado más de 15 días hábiles desde el despacho y tu pedido sigue sin llegar, <a href="contacto.html" style="color:var(--green);font-weight:600;">contáctanos</a> y lo resolveremos de inmediato.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">¿Puedo cambiar la dirección de entrega?</summary>
+        <p class="faq-a">Puedes modificar la dirección siempre que el pedido no haya sido despachado aún. Escríbenos a <a href="mailto:info@tryorgatics.com" style="color:var(--green);">info@tryorgatics.com</a> con tu número de pedido y la nueva dirección lo antes posible.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">¿Qué hago si mi paquete llega dañado?</summary>
+        <p class="faq-a">Fotografía el paquete antes de abrirlo y el contenido dañado, y envíanos esas imágenes a info@tryorgatics.com. Tienes 90 días desde la recepción para reportar cualquier problema. Te repondremos el producto o te haremos un reembolso completo sin preguntas.</p>
+      </details>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col">
+        <span class="footer-logo">Orgatics</span>
+        <p>Suplementos naturales de alta potencia, probados en laboratorio y respaldados por ciencia real.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Información</h4>
+        <ul>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Términos del Servicio</a></li>
+          <li><a href="#">Política de Envíos</a></li>
+          <li><a href="#">Política de Reembolso</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="#">Info@tryorgatics.com</a></li>
+          <li><a href="#">+1 307 310 3191</a></li>
+          <li><a href="#">30N Gould Street, Ste R</a></li>
+          <li><a href="#">Sheridan, Wyoming, 82801</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Suscríbete a nuestros correos</h4>
+        <p style="margin-bottom:14px;font-size:12px;">Acceso instantáneo a la primera entrega.</p>
+        <div class="footer-form">
+          <input type="email" placeholder="Correo electrónico" />
+          <button>Inscribirse</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026, Orgatics. Todos los derechos reservados.</p>
+      <div class="legal-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="#">Política de Envío</a>
+      </div>
+    </div>
+    <div class="disclaimer-bar">
+      <p><strong style="color:rgba(255,255,255,0.4);">Descargo de responsabilidad:</strong> Estas declaraciones no han sido evaluadas por la FDA. Estos productos no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Demo orders database
+    const demoOrders = {
+      'ORG-2024-00142': { status: 'En camino', date: '15 de mayo de 2026', address: 'Calle Principal 123<br>Buenos Aires, Argentina', tracking: '1Z999AA10123456784' },
+      'ORG-2024-00100': { status: 'Entregado', date: '10 de mayo de 2026', address: 'Av. Corrientes 456<br>Buenos Aires, Argentina', tracking: '1Z999BB20987654321' },
+      'ORG-2024-00200': { status: 'Preparando', date: '19 de mayo de 2026', address: 'Calle Falsa 789<br>Córdoba, Argentina', tracking: 'Pendiente de asignación' },
+    };
+    const demoEmails = {
+      'test@orgatics.com': 'ORG-2024-00142',
+      'cliente@ejemplo.com': 'ORG-2024-00100',
+    };
+
+    function trackOrder() {
+      const orderNum = document.getElementById('order-number').value.trim().toUpperCase();
+      const email = document.getElementById('order-email').value.trim().toLowerCase();
+      const result = document.getElementById('tracking-result');
+      const error = document.getElementById('tracking-error');
+
+      error.classList.remove('show');
+      result.classList.remove('show');
+
+      let order = null;
+      let orderId = orderNum;
+
+      if (orderNum && demoOrders[orderNum]) {
+        order = demoOrders[orderNum];
+      } else if (email && demoEmails[email]) {
+        orderId = demoEmails[email];
+        order = demoOrders[orderId];
+      }
+
+      if (!order) {
+        error.classList.add('show');
+        return;
+      }
+
+      // Populate result
+      document.getElementById('result-order-id').textContent = 'Pedido #' + orderId;
+      document.getElementById('result-date').textContent = 'Realizado el ' + order.date + ' · 1 artículo';
+      document.getElementById('result-status').textContent = order.status;
+      document.getElementById('result-address').innerHTML = order.address;
+      document.getElementById('result-tracking-num').textContent = order.tracking;
+
+      // Adjust step states based on status
+      const steps = document.querySelectorAll('.step');
+      if (order.status === 'Entregado') {
+        steps.forEach(s => { s.classList.remove('active','pending'); s.classList.add('done'); s.querySelector('.step-icon').textContent = '✓'; });
+        steps[3].querySelector('.step-content strong').textContent = 'Entregado';
+        steps[3].querySelector('.step-content span').textContent = 'Tu pedido fue entregado exitosamente.';
+      } else if (order.status === 'Preparando') {
+        steps[0].className = 'step done'; steps[0].querySelector('.step-icon').textContent = '✓';
+        steps[1].className = 'step active'; steps[1].querySelector('.step-icon').textContent = '📦';
+        steps[2].className = 'step pending'; steps[2].querySelector('.step-icon').textContent = '🚚';
+        steps[3].className = 'step pending'; steps[3].querySelector('.step-icon').textContent = '🏠';
+      }
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Allow Enter key to trigger search
+    document.getElementById('order-number').addEventListener('keydown', e => { if (e.key === 'Enter') trackOrder(); });
+    document.getElementById('order-email').addEventListener('keydown', e => { if (e.key === 'Enter') trackOrder(); });
+
+    // Cart / Mobile menu
+    function openCart() { document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow = ''; }
+    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); document.getElementById('mobile-overlay').classList.toggle('open'); }
+    function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('mobile-overlay').classList.remove('open'); }
+
+    // Cerrar search dropdown al hacer click fuera
+    document.addEventListener('click', function(e) {
+      const sd = document.getElementById('search-dropdown');
+      if (sd && sd.classList.contains('open') && !e.target.closest('.search-wrapper')) {
+        sd.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Producto — Orgatics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #0a5945; --green-light: #0d7a60; --purple: #6d388b;
+      --cream: #f5f1eb; --black: #121212; --black-soft: #1a1a1a;
+      --success: #00b67a; --white: #ffffff; --border: #dbdbdb; --muted: #6b6b6b;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+
+    .announce-bar { background: var(--green); color: var(--white); text-align: center; padding: 10px 16px; font-size: 13px; font-weight: 500; }
+    .announce-bar a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 5%; height: 64px; gap: 16px; }
+    .nav-left { display: flex; align-items: center; }
+    .nav-logo { font-family: var(--font-display); font-size: 22px; color: var(--green); text-decoration: none; letter-spacing: -0.01em; justify-self: center; white-space: nowrap; }
+    .nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--black); text-decoration: none; opacity: 0.72; padding: 6px 12px; border-radius: 6px; transition: opacity 0.2s; }
+    .nav-links a:hover { opacity: 1; background: #f5f5f5; }
+    .nav-cta { background: var(--green) !important; color: var(--white) !important; padding: 8px 18px !important; border-radius: 6px; font-size: 13px !important; font-weight: 600 !important; opacity: 1 !important; }
+    .nav-cta:hover { background: var(--green-light) !important; }
+    .nav-icon-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; position: relative; }
+    .nav-icon-btn:hover { background: var(--cream); }
+    .nav-icon-btn svg { width: 18px; height: 18px; stroke: var(--black); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .cart-count { position: absolute; top: -5px; right: -5px; width: 17px; height: 17px; background: var(--green); color: var(--white); border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--black); border-radius: 2px; }
+    .mobile-menu { display: none; }
+    .mobile-menu-overlay { display: none; }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb { max-width: 1120px; margin: 0 auto; padding: 16px 5% 0; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--green); }
+    .breadcrumb span { opacity: 0.5; }
+
+    /* ── PRODUCT DETAIL ── */
+    .product-detail { max-width: 1120px; margin: 0 auto; padding: 32px 5% 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+
+    /* Left: Image gallery */
+    .product-gallery { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 80px; }
+    .main-image {
+      background: var(--cream);
+      border-radius: 20px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .main-image .product-pkg {
+      width: 55%;
+      aspect-ratio: 2/3;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      gap: 10px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+    }
+    .pkg-1 { background: linear-gradient(160deg, #1a6b4a 0%, #0a5945 50%, #083d30 100%); }
+    .pkg-2 { background: linear-gradient(160deg, #2d1b69 0%, #1a0e3d 50%, #0d0820 100%); }
+    .product-pkg .pkg-brand { font-family: var(--font-display); font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; text-transform: uppercase; }
+    .product-pkg .pkg-icon { font-size: 48px; }
+    .product-pkg .pkg-name { font-family: var(--font-display); font-size: 20px; color: var(--white); text-align: center; line-height: 1.2; }
+    .product-pkg .pkg-mg { font-size: 12px; color: rgba(255,255,255,0.55); font-weight: 600; }
+    .main-image .img-badge { position: absolute; top: 16px; left: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 10px; font-weight: 700; text-align: center; line-height: 1.3; }
+    .main-image .viral-badge { position: absolute; top: 16px; right: 16px; background: var(--purple); color: var(--white); font-size: 9px; font-weight: 700; padding: 6px 9px; border-radius: 6px; text-align: center; line-height: 1.3; }
+    .main-image .sale-ribbon { position: absolute; bottom: 16px; left: 16px; background: var(--green); color: var(--white); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; }
+
+    .thumb-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .thumb {
+      aspect-ratio: 1; border-radius: 8px;
+      background: var(--cream); border: 2px solid transparent;
+      cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb.active { border-color: var(--green); }
+    .thumb:hover { border-color: var(--green); transform: translateY(-1px); }
+
+    /* Right: Product info */
+    .product-info { display: flex; flex-direction: column; gap: 24px; }
+
+    .product-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pbadge { font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+    .pbadge-green { background: rgba(10,89,69,0.1); color: var(--green); }
+    .pbadge-purple { background: rgba(109,56,139,0.1); color: var(--purple); }
+
+    .product-info h1 { font-family: var(--font-display); font-size: clamp(22px, 3vw, 30px); line-height: 1.25; letter-spacing: -0.02em; }
+
+    .rating-row { display: flex; align-items: center; gap: 8px; }
+    .stars { display: flex; gap: 2px; }
+    .stars span { font-size: 16px; }
+    .rating-count { font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+
+    .price-section { padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .price-main { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+    .price-current { font-size: 28px; font-weight: 700; color: var(--black); }
+    .price-was { font-size: 16px; color: var(--muted); text-decoration: line-through; }
+    .price-save { font-size: 13px; font-weight: 700; color: var(--success); background: rgba(0,182,122,0.1); padding: 3px 10px; border-radius: 20px; }
+    .price-note { font-size: 12px; color: var(--muted); }
+
+    .option-section { display: flex; flex-direction: column; gap: 12px; }
+    .option-label { font-size: 13px; font-weight: 700; color: var(--black); }
+    .option-label span { font-weight: 400; color: var(--muted); }
+    .option-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .opt-btn {
+      padding: 10px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--white);
+      transition: all 0.15s;
+      color: var(--black);
+    }
+    .opt-btn:hover { border-color: var(--green); }
+    .opt-btn.selected { border-color: var(--green); background: var(--green); color: var(--white); }
+    .opt-btn.unavailable { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+    .qty-section { display: flex; flex-direction: column; gap: 10px; }
+    .qty-row { display: flex; align-items: center; gap: 12px; }
+    .qty-ctrl { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .qty-btn { width: 40px; height: 44px; border: none; background: transparent; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; color: var(--black); }
+    .qty-btn:hover { background: var(--cream); }
+    .qty-num { width: 48px; text-align: center; font-size: 15px; font-weight: 600; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0; height: 44px; font-family: var(--font-body); }
+    .qty-num:focus { outline: none; }
+
+    .btn-add-cart {
+      flex: 1;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 15px 24px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .btn-add-cart:hover { background: var(--green-light); }
+    .btn-buy-now {
+      width: 100%;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 15px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-buy-now:hover { opacity: 0.8; }
+
+    .trust-badges { display: flex; gap: 16px; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .trust-item span { font-size: 16px; }
+
+    .product-description { padding-top: 24px; border-top: 1px solid var(--border); }
+    .product-description h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 14px; }
+    .product-description p { font-size: 14px; color: #555; line-height: 1.75; margin-bottom: 12px; }
+    .product-description ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .product-description ul li { font-size: 14px; color: #555; line-height: 1.6; }
+
+    .ingredients-block { background: var(--cream); border-radius: 12px; padding: 20px; }
+    .ingredients-block h4 { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .ingredients-block p { font-size: 12px; color: #666; line-height: 1.7; }
+
+    /* Cart drawer */
+    .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 300; }
+    .cart-overlay.open { display: block; }
+    .cart-drawer { position: fixed; top: 0; right: -400px; width: 360px; height: 100vh; background: var(--white); box-shadow: -8px 0 40px rgba(0,0,0,0.15); z-index: 301; display: flex; flex-direction: column; transition: right 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .cart-drawer.open { right: 0; }
+    .cart-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .cart-drawer-header h3 { font-family: var(--font-display); font-size: 18px; }
+    .cart-close { width: 32px; height: 32px; border: none; background: #f5f5f5; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .cart-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; color: var(--muted); }
+    .cart-empty .empty-icon { font-size: 48px; opacity: 0.4; }
+    .cart-item { display: flex; gap: 12px; align-items: flex-start; }
+    .cart-item-img { width: 56px; height: 56px; border-radius: 8px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .cart-item-info { flex: 1; }
+    .cart-item-info strong { font-size: 13px; display: block; margin-bottom: 2px; }
+    .cart-item-info span { font-size: 12px; color: var(--muted); }
+    .cart-item-price { font-size: 14px; font-weight: 700; }
+    .cart-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 16px; padding: 2px; }
+    .cart-drawer-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+    .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; }
+    .cart-checkout-btn { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 8px; padding: 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; cursor: pointer; }
+    .cart-checkout-btn:hover { background: var(--green-light); }
+
+    /* Add to cart toast */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 50px; font-size: 14px; font-weight: 600; z-index: 500; transition: transform 0.3s ease; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RICH CONTENT SECTIONS ── */
+    .rich-content { max-width: 900px; margin: 0 auto; padding: 0 5% 80px; display: flex; flex-direction: column; gap: 24px; }
+    .rc-section { width: 100%; border-radius: 20px; overflow: hidden; padding: 48px 40px; }
+
+    /* 1. INGREDIENTES */
+    .rc-ingredientes { background: #0d3d2a; color: var(--white); padding: 56px 40px; }
+    .rc-ing-inner { display: flex; flex-direction: column; gap: 32px; }
+    .rc-ing-callout { display: flex; align-items: flex-start; gap: 14px; max-width: 260px; }
+    .rc-ing-callout.rc-ing-top { align-self: center; max-width: 300px; }
+    .rc-ing-icon { font-size: 28px; width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .rc-ing-callout strong { display: block; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .rc-ing-callout p { font-size: 12px; opacity: 0.75; line-height: 1.5; }
+    .rc-ing-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .rc-ing-center { flex-shrink: 0; }
+    .capsulas-visual { font-size: 40px; text-align: center; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5)); line-height: 1.3; }
+    .rc-ing-right { text-align: right; align-items: flex-end; }
+    .rc-ing-bottom-row { display: flex; justify-content: space-between; gap: 24px; }
+
+    /* 2. COMPROMISO */
+    .rc-compromiso { background: var(--cream); text-align: center; }
+    .rc-compromiso h2 { font-family: var(--font-display); font-size: clamp(24px,3vw,36px); color: var(--green); line-height: 1.2; margin-bottom: 36px; }
+    .rc-table-wrap { overflow-x: auto; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .rc-comp-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 14px; overflow: hidden; }
+    .rc-comp-table thead th { padding: 16px 20px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; }
+    .rc-th-feat { text-align: left; background: var(--white); width: 60%; }
+    .rc-th-us { background: var(--green); color: var(--white); width: 20%; }
+    .rc-th-other { background: #888; color: var(--white); width: 20%; }
+    .rc-comp-table tbody tr { border-top: 1px solid var(--border); }
+    .rc-comp-table tbody tr:hover { background: #fafafa; }
+    .rc-comp-table tbody td { padding: 14px 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.03em; text-align: center; }
+    .rc-comp-table tbody td:first-child { text-align: left; display: flex; align-items: center; gap: 10px; }
+    .rc-row-icon { font-size: 18px; }
+    .rc-check { color: var(--green); font-size: 22px; font-weight: 900; }
+    .rc-cross { color: #bbb; font-size: 22px; }
+
+    /* 3. GARANTÍA */
+    .rc-garantia { background: var(--cream); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .rc-garantia-badge { width: 110px; height: 110px; background: var(--green); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(10,89,69,0.15); clip-path: polygon(50% 0%,61% 5%,74% 3%,82% 13%,95% 15%,97% 28%,100% 40%,93% 50%,100% 60%,97% 72%,95% 85%,82% 87%,74% 97%,61% 95%,50% 100%,39% 95%,26% 97%,18% 87%,5% 85%,3% 72%,0% 60%,7% 50%,0% 40%,3% 28%,5% 15%,18% 13%,26% 3%,39% 5%); }
+    .rc-garantia-num { font-family: var(--font-display); font-size: 38px; color: var(--white); line-height: 1; }
+    .rc-garantia-dias { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: rgba(255,255,255,0.85); }
+    .rc-garantia h2 { font-family: var(--font-display); font-size: clamp(22px,3vw,32px); line-height: 1.25; color: var(--black); }
+    .rc-garantia-line { width: 60px; height: 3px; background: var(--green); border-radius: 2px; }
+    .rc-garantia p { font-size: 15px; color: #555; line-height: 1.75; max-width: 520px; text-align: center; }
+
+    /* 4. SUPLEMENTO */
+    .rc-supl { background: #0d3d2a; color: var(--white); }
+    .rc-supl h2 { font-size: clamp(20px,2.5vw,28px); font-weight: 800; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .rc-supl-sub { font-size: 13px; opacity: 0.7; margin-bottom: 24px; }
+    .rc-supl-table { width: 100%; border-collapse: collapse; border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+    .rc-supl-table thead th { background: rgba(255,255,255,0.1); padding: 12px 16px; font-size: 13px; font-weight: 700; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .rc-supl-table tbody td { padding: 16px 16px; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.15); vertical-align: top; line-height: 1.6; }
+    .rc-supl-table tbody td:last-child { text-align: center; font-size: 15px; white-space: nowrap; }
+    .rc-supl-table em { opacity: 0.7; font-style: italic; }
+    .rc-supl-table small { font-size: 11px; opacity: 0.6; }
+    .rc-supl-note { font-size: 12px; opacity: 0.6; margin: 8px 0 28px; }
+    .rc-uso-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+    .rc-uso-item { padding: 20px 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2); }
+    .rc-uso-item:last-child { border-right: none; }
+    .rc-uso-item span { font-size: 32px; display: block; margin-bottom: 8px; }
+    .rc-uso-item p { font-size: 13px; line-height: 1.4; opacity: 0.85; }
+    .rc-supl-otros { font-size: 12px; opacity: 0.65; line-height: 1.7; }
+
+    /* 5. CONFIANZA */
+    .rc-confianza { background: #0a3d28; color: var(--white); text-align: center; }
+    .rc-confianza h2 { font-family: var(--font-display); font-size: clamp(22px,3vw,32px); margin-bottom: 36px; line-height: 1.3; }
+    .rc-confianza-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 36px; }
+    .rc-conf-card { border: 1.5px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .rc-conf-card span { font-size: 32px; }
+    .rc-conf-card p { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; line-height: 1.4; text-align: center; opacity: 0.9; }
+    .rc-checks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; text-align: left; max-width: 480px; margin: 0 auto; }
+    .rc-checks-grid div { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .rc-badge-check { width: 24px; height: 24px; background: rgba(127,255,127,0.2); border: 1.5px solid rgba(127,255,127,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #7fff7f; flex-shrink: 0; }
+
+    /* 6. TESTIMONIO */
+    .rc-testimonio { background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .rc-test-stars { font-size: 20px; color: #fbbf24; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .rc-test-stars span { font-size: 12px; color: var(--muted); font-family: var(--font-body); }
+    .rc-testimonio blockquote { font-family: var(--font-display); font-size: clamp(20px,2.5vw,28px); line-height: 1.3; color: var(--black); margin-bottom: 16px; }
+    .rc-test-left p { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 12px; }
+    .rc-test-author { font-weight: 700; color: var(--black) !important; }
+    .rc-mock-bag { background: linear-gradient(160deg,#2d5a2d 0%,#1a3d1a 40%,#0d2b0d 100%); border-radius: 16px; padding: 28px 24px; color: var(--white); text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
+    .rc-mock-brand { font-size: 13px; opacity: 0.7; letter-spacing: 0.08em; display: block; margin-bottom: 8px; }
+    .rc-mock-bag h3 { font-size: 20px; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+    .rc-mock-bag h3 span { color: #7cba3d; font-size: 28px; }
+    .rc-mock-bag > p { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .rc-mock-sub { font-size: 11px !important; opacity: 0.75; letter-spacing: 0.04em; margin-bottom: 16px !important; }
+    .rc-mock-checks { text-align: left; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 14px; }
+    .rc-mock-checks span { font-size: 11px; opacity: 0.85; display: flex; align-items: center; gap: 6px; }
+    .rc-test-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .rc-test-bar div { display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--green); border-radius: 10px; padding: 12px 8px; }
+    .rc-test-bar span { font-size: 20px; }
+    .rc-test-bar small { font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 700; letter-spacing: 0.04em; text-align: center; line-height: 1.3; }
+
+    @media (max-width: 768px) {
+      .rich-content { padding: 0 12px 60px; gap: 16px; }
+      .rc-section { padding: 32px 20px; border-radius: 16px; }
+      .rc-ing-row { flex-direction: column; }
+      .rc-ing-bottom-row { flex-direction: column; }
+      .rc-ing-right { align-items: flex-start; text-align: left; }
+      .rc-confianza-cards { grid-template-columns: 1fr 1fr; }
+      .rc-checks-grid { grid-template-columns: 1fr; }
+      .rc-testimonio { grid-template-columns: 1fr; }
+      .rc-uso-grid { grid-template-columns: 1fr; }
+      .rc-uso-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.2); }
+      .rc-comp-table tbody td:first-child { font-size: 11px; }
+    }
+
+    /* Footer */
+    footer { background: var(--black-soft); color: rgba(255,255,255,0.75); padding: 64px 5% 40px; }
+    .footer-top { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.5fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .footer-col h4 { color: var(--white); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-col p { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+    .footer-logo { font-family: var(--font-display); font-size: 22px; color: var(--white); margin-bottom: 12px; display: block; }
+    .footer-form { display: flex; flex-direction: column; gap: 10px; }
+    .footer-form input { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 11px 14px; font-family: var(--font-body); font-size: 13px; color: var(--white); outline: none; }
+    .footer-form input::placeholder { color: rgba(255,255,255,0.35); }
+    .footer-form button { background: var(--white); color: var(--black); border: none; border-radius: 6px; padding: 11px; font-family: var(--font-body); font-size: 13px; font-weight: 700; cursor: pointer; }
+    .footer-bottom { max-width: 1120px; margin: 32px auto 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.35); }
+    .footer-bottom .legal-links { display: flex; gap: 20px; }
+    .footer-bottom .legal-links a { font-size: 11px; color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-bottom .legal-links a:hover { color: rgba(255,255,255,0.75); }
+    .disclaimer-bar { max-width: 1120px; margin: 24px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .disclaimer-bar p { font-size: 11px; color: rgba(255,255,255,0.28); line-height: 1.7; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .product-detail { grid-template-columns: 1fr; gap: 32px; }
+      .product-gallery { position: static; }
+    }
+    @media (max-width: 768px) {
+      nav { grid-template-columns: auto 1fr auto; padding: 0 16px; gap: 0; }
+      .nav-left { display: none; }
+      .nav-logo { display: block; text-align: center; font-size: 20px; }
+      .nav-hamburger { display: flex; order: -1; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .mobile-menu.open { display: flex; }
+      .mobile-menu-overlay.open { display: block; }
+    }
+    @media (max-width: 768px) {
+      .mobile-menu { position: fixed; top: 0; left: 0; width: 80vw; max-width: 300px; height: 100vh; background: var(--white); z-index: 400; flex-direction: column; padding: 24px 20px; box-shadow: 4px 0 32px rgba(0,0,0,0.15); transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+      .mobile-menu.open { display: flex; transform: translateX(0); }
+      .mobile-menu-overlay.open { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 399; }
+      .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+      .mobile-menu-header .logo { font-family: var(--font-display); font-size: 20px; color: var(--green); }
+      .mobile-menu-close { width: 32px; height: 32px; background: #f5f5f5; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+      .mobile-menu ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+      .mobile-menu ul li a { display: block; padding: 13px 14px; font-size: 16px; font-weight: 500; color: var(--black); text-decoration: none; border-radius: 8px; }
+      .mobile-menu ul li a:hover { background: var(--cream); }
+      .mobile-menu ul li a.cta-mobile { margin-top: 12px; background: var(--green); color: var(--white); text-align: center; font-weight: 700; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announce-bar">
+    🚀 Únete gratis hoy &mdash; Acceso inmediato a la primera entrega &nbsp;|&nbsp; <a href="index.html">Suscríbete ahora →</a>
+  </div>
+
+  <nav>
+    <div class="nav-left">
+      <ul class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html" class="nav-cta">Catálogo</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="rastreo.html">Rastrea tu producto</a></li>
+      </ul>
+    </div>
+    <a href="index.html" class="nav-logo">Orgatics</a>
+    <div class="nav-right">
+      <button class="nav-icon-btn" aria-label="Buscar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+      </button>
+      <button class="nav-icon-btn" aria-label="Carrito" onclick="openCart()">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <div class="nav-hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="logo">Orgatics</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Catálogo</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="rastreo.html">Rastrea tu producto</a></li>
+      <li><a href="index.html#hero" class="cta-mobile">Suscribirse gratis →</a></li>
+    </ul>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Tu Carrito</h3>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-empty" id="cart-empty">
+      <div class="empty-icon">🛍️</div>
+      <p>Tu carrito está vacío.<br>Agrega productos para continuar.</p>
+    </div>
+    <div class="cart-items" id="cart-items" style="display:none;"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-total"><span>Total</span><span id="cart-total">$0.00</span></div>
+      <button class="cart-checkout-btn">Ir al checkout →</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">✓ Producto agregado al carrito</div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="index.html">Inicio</a>
+    <span>›</span>
+    <a href="catalogo.html">Catálogo</a>
+    <span>›</span>
+    <span id="bread-name">Aceite de Orégano Orgáticos</span>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div class="product-detail" id="product-detail">
+
+    <!-- LEFT: Gallery -->
+    <div class="product-gallery">
+      <div class="main-image" id="main-image-wrap">
+        <div class="img-badge">LAB<br>TESTED</div>
+        <div class="viral-badge">VIRAL ON<br>TikTok</div>
+        <img
+          src="img/producto-bolsa.jpg"
+          id="main-product-img"
+          alt="Aceite de Orégano y Semilla Negra Orgáticos"
+          style="width:82%;max-width:300px;height:auto;object-fit:contain;filter:drop-shadow(0 16px 40px rgba(0,0,0,0.18));transition:opacity 0.25s;" />
+        <div class="sale-ribbon">🌿 AHORRA UN 50%</div>
+      </div>
+      <div class="thumb-row">
+        <div class="thumb active" onclick="switchImg('img/producto-bolsa.jpg',this)">
+          <img src="img/producto-bolsa.jpg" alt="Producto" />
+        </div>
+        <div class="thumb" onclick="switchImg('img/capsulas-infografia.jpg',this)">
+          <img src="img/capsulas-infografia.jpg" alt="Ingredientes" />
+        </div>
+        <div class="thumb" onclick="switchImg('img/tabla-compromiso.jpg',this)">
+          <img src="img/tabla-compromiso.jpg" alt="Compromiso" />
+        </div>
+        <div class="thumb" onclick="switchImg('img/garantia-90.jpg',this)">
+          <img src="img/garantia-90.jpg" alt="Garantía" />
+        </div>
+        <div class="thumb" onclick="switchImg('img/info-suplemento.jpg',this)">
+          <img src="img/info-suplemento.jpg" alt="Suplemento" />
+        </div>
+        <div class="thumb" onclick="switchImg('img/por-que-confiar.jpg',this)">
+          <img src="img/por-que-confiar.jpg" alt="Confianza" />
+        </div>
+        <div class="thumb" onclick="switchImg('img/testimonio-eleanor.jpg',this)">
+          <img src="img/testimonio-eleanor.jpg" alt="Testimonio" />
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Info -->
+    <div class="product-info">
+      <div class="product-badges">
+        <span class="pbadge pbadge-green" id="prod-badge1">🌿 100% Natural</span>
+        <span class="pbadge pbadge-purple">Lab Tested</span>
+        <span class="pbadge pbadge-green">Sin Rellenos</span>
+      </div>
+
+      <h1 id="prod-title">Aceite de Orégano y Semilla Negra Orgáticos</h1>
+
+      <div class="rating-row">
+        <div class="stars"><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span></div>
+        <span class="rating-count">4.9 (2,847 reseñas)</span>
+      </div>
+
+      <div class="price-section">
+        <div class="price-main">
+          <span class="price-current">$44.95</span>
+          <span class="price-was">$90.00</span>
+          <span class="price-save">Ahorras 50%</span>
+        </div>
+        <p class="price-note">Precio incluye impuestos. Envío calculado al finalizar la compra.</p>
+      </div>
+
+      <div class="option-section">
+        <p class="option-label">Tamaño: <span id="selected-size">60 cápsulas</span></p>
+        <div class="option-btns">
+          <button class="opt-btn selected" onclick="selectSize(this, '30 cápsulas')">30 cáps.</button>
+          <button class="opt-btn" onclick="selectSize(this, '60 cápsulas')">60 cáps.</button>
+          <button class="opt-btn" onclick="selectSize(this, '90 cápsulas')">90 cáps.</button>
+          <button class="opt-btn unavailable" onclick="selectSize(this, '120 cápsulas')">120 cáps.</button>
+        </div>
+      </div>
+
+      <div class="qty-section">
+        <p class="option-label">Cantidad</p>
+        <div class="qty-row">
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input class="qty-num" type="number" value="1" min="1" max="99" id="qty-input" />
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+          <button class="btn-add-cart" onclick="addToCart()">Agregar al carrito</button>
+        </div>
+        <button class="btn-buy-now" onclick="addToCart(); alert('Redirigiendo al checkout...')">Comprar ahora</button>
+      </div>
+
+      <div class="trust-badges">
+        <div class="trust-item"><span>🚚</span> Envío gratis +$50</div>
+        <div class="trust-item"><span>🔒</span> Pago seguro</div>
+        <div class="trust-item"><span>↩️</span> Devolución 90 días</div>
+        <div class="trust-item"><span>✅</span> Stock disponible</div>
+      </div>
+
+      <div class="product-description">
+        <h3>Descripción del producto</h3>
+        <p id="prod-desc">Nuestra fórmula de Aceite de Orégano Silvestre con Aceite de Semilla Negra combina dos de los extractos botánicos más potentes del mundo. Cada cápsula contiene 8,000mg de concentrado activo, diseñado para proporcionar una defensa sistémica completa contra la inflamación crónica.</p>
+        <p>Fabricado bajo estrictos estándares GMP y probado de forma independiente por laboratorios certificados para garantizar potencia, pureza y ausencia de contaminantes.</p>
+        <ul>
+          <li>✓ 8,000mg de Aceite de Orégano Silvestre por porción</li>
+          <li>✓ Combinado con Aceite de Semilla Negra (Nigella Sativa)</li>
+          <li>✓ Sin rellenos sintéticos, sin aglutinantes artificiales</li>
+          <li>✓ Certificado sin OMG y libre de gluten</li>
+          <li>✓ Probado en laboratorio independiente — CoA disponible</li>
+        </ul>
+        <br>
+        <div class="ingredients-block">
+          <h4>Ingredientes activos</h4>
+          <p>Aceite de Orégano Silvestre (Origanum vulgare) 8,000mg · Aceite de Semilla Negra (Nigella sativa) 2,000mg · Aceite MCT (Base de absorción) · Vitamina E (Tocoferol natural) · Cápsula de gelatina blanda (Gelatina bovina, Glicerina, Agua purificada).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIONES DE CONTENIDO ENRIQUECIDO ══ -->
+  <div class="rich-content">
+
+    <!-- 1. INFOGRAFÍA DE INGREDIENTES -->
+    <section class="rc-section rc-ingredientes">
+      <div class="rc-ing-inner">
+        <div class="rc-ing-callout rc-ing-top">
+          <div class="rc-ing-icon">🌱</div>
+          <div><strong>TIMOQUINONA NATURAL</strong><p>Compuesto bioactivo presente de forma natural.</p></div>
+        </div>
+        <div class="rc-ing-row">
+          <div class="rc-ing-callout">
+            <div class="rc-ing-icon">🌾</div>
+            <div><strong>COMPLEJO 2 EN 1 CON ACEITE DE SEMILLA NEGRA</strong><p>Fórmula sinérgica para un mayor bienestar.</p></div>
+          </div>
+          <div class="rc-ing-center">
+            <div class="capsulas-visual">💊💊💊<br>💊💊</div>
+          </div>
+          <div class="rc-ing-callout rc-ing-right">
+            <div class="rc-ing-icon">🌿</div>
+            <div><strong>ACEITE FRESCO DE ORÉGANO <span style="color:#7fff7f">20:1</span></strong><p>Extracto concentrado de alta potencia.</p></div>
+          </div>
+        </div>
+        <div class="rc-ing-bottom-row">
+          <div class="rc-ing-callout">
+            <div class="rc-ing-icon">⚛️</div>
+            <div><strong>RETENER <span style="color:#7fff7f">165 MG DE CARVACROL</span></strong><p>Garantiza una potencia constantemente alta en cada cápsula.</p></div>
+          </div>
+          <div class="rc-ing-callout">
+            <div class="rc-ing-icon">🍃</div>
+            <div><strong>INGREDIENTES HERBALES <span style="color:#7fff7f">DE CONFIANZA</span></strong><p>Seleccionados cuidadosamente para pureza y efectividad.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TABLA COMPARATIVA -->
+    <section class="rc-section rc-compromiso">
+      <h2>NUESTRO COMPROMISO<br>CON TU BIENESTAR</h2>
+      <div class="rc-table-wrap">
+        <table class="rc-comp-table">
+          <thead>
+            <tr>
+              <th class="rc-th-feat"></th>
+              <th class="rc-th-us">ORGATICS®</th>
+              <th class="rc-th-other">OTROS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="rc-row-icon">🔬</span> INGREDIENTES CLÍNICAMENTE ESTUDIADOS</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+            <tr><td><span class="rc-row-icon">🛡️</span> PROBADOS POR TERCEROS INDEPENDIENTES</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+            <tr><td><span class="rc-row-icon">🧪</span> FÓRMULAS LIMPIAS</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+            <tr><td><span class="rc-row-icon">🌐</span> INSTALACIONES CERTIFICADAS BAJO GMP</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+            <tr><td><span class="rc-row-icon">🍃</span> APTO PARA PALEO</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+            <tr><td><span class="rc-row-icon">🌾</span> SIN ALÉRGENOS NI GLUTEN</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+            <tr><td><span class="rc-row-icon">📦</span> SIN ADITIVOS, AZÚCAR NI SABORES ARTIFICIALES</td><td><span class="rc-check">✓</span></td><td><span class="rc-cross">✗</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. GARANTÍA 90 DÍAS -->
+    <section class="rc-section rc-garantia">
+      <div class="rc-garantia-badge">
+        <span class="rc-garantia-num">90</span>
+        <span class="rc-garantia-dias">DÍAS</span>
+      </div>
+      <h2>Garantía de Devolución<br>de Dinero por 90 Días</h2>
+      <div class="rc-garantia-line"></div>
+      <p>Si no notas mejoras notables dentro de los primeros 90 días, simplemente solicita la devolución de tu pedido para obtener un reembolso completo, <strong style="color:var(--green)">sin preguntas.</strong></p>
+    </section>
+
+    <!-- 4. INFORMACIÓN DEL SUPLEMENTO -->
+    <section class="rc-section rc-supl">
+      <h2>INFORMACIÓN DEL SUPLEMENTO</h2>
+      <p class="rc-supl-sub">Tamaño de porción: 2 cápsulas blandas &nbsp;·&nbsp; Porciones por envase: 60</p>
+      <table class="rc-supl-table">
+        <thead><tr><th>CANTIDAD POR PORCIÓN</th><th>% VALOR DIARIO</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Aceite de orégano</strong><br><em>(Origanum minutiflorum) (hoja)</em><br><small>(equivalente a 300 mg de extracto natural de orégano 20:1)</small></td>
+            <td><strong>6.000 mg *</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Aceite de semilla negra</strong><br><em>(Nigella sativa)</em><br><small>(contiene timoquinona [TQ] natural)</small></td>
+            <td><strong>200 mg *</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="rc-supl-note">* Valor diario no establecido.</p>
+      <div class="rc-uso-grid">
+        <div class="rc-uso-item"><span>💊</span><p>Toma 2 cápsulas blandas</p></div>
+        <div class="rc-uso-item"><span>🥤</span><p>Acompáñalas con tu bebida favorita</p></div>
+        <div class="rc-uso-item"><span>🕐</span><p>Consume una vez al día</p></div>
+      </div>
+      <p class="rc-supl-otros"><strong>Otros ingredientes:</strong> Cápsula blanda (gelatina, glicerina, agua purificada).<br><strong>Libre de:</strong> soya, lácteos, gluten y nueces. Mantener fuera del alcance de los niños.</p>
+    </section>
+
+    <!-- 5. POR QUÉ CONFIAR -->
+    <section class="rc-section rc-confianza">
+      <h2>¿Por qué confiar en <span style="color:#7fff7f">ORGATICS®</span>?</h2>
+      <div class="rc-confianza-cards">
+        <div class="rc-conf-card"><span>🔬</span><p>INGREDIENTES CLÍNICAMENTE ESTUDIADOS</p></div>
+        <div class="rc-conf-card"><span>🛡️</span><p>PROBADOS POR TERCEROS INDEPENDIENTES</p></div>
+        <div class="rc-conf-card"><span>🧪</span><p>FÓRMULAS LIMPIAS</p></div>
+        <div class="rc-conf-card"><span>🌐</span><p>INSTALACIONES CERTIFICADAS BAJO GMP</p></div>
+      </div>
+      <div class="rc-checks-grid">
+        <div><span class="rc-badge-check">✓</span> Apto para paleo</div>
+        <div><span class="rc-badge-check">✓</span> Sin aditivos artificiales</div>
+        <div><span class="rc-badge-check">✓</span> Sin alérgenos</div>
+        <div><span class="rc-badge-check">✓</span> Sin azúcar añadida</div>
+        <div><span class="rc-badge-check">✓</span> Sin gluten</div>
+        <div><span class="rc-badge-check">✓</span> Sin sabores artificiales</div>
+      </div>
+    </section>
+
+    <!-- 6. TESTIMONIO ELEANOR -->
+    <section class="rc-section rc-testimonio">
+      <div class="rc-test-left">
+        <div class="rc-test-stars">★★★★★ <span>Valoración 4.9 / 5 | Con la confianza de más de 95,000+ personas</span></div>
+        <blockquote>"Lo primero que realmente marcó <strong style="color:var(--green)">la diferencia</strong> en 30 años."</blockquote>
+        <p>Probé de todo. Este aceite finalmente terminó con la inflamación persistente que he estado combatiendo durante años. He recuperado mi salud.</p>
+        <p class="rc-test-author">— Eleanor R.</p>
+      </div>
+      <div class="rc-test-right">
+        <div class="rc-product-mock">
+          <div class="rc-mock-bag">
+            <span class="rc-mock-brand">orgatics.</span>
+            <h3>ACEITE DE<br><span>ORÉGANO</span></h3>
+            <p>6,000MG</p>
+            <p class="rc-mock-sub">CON ACEITE DE SEMILLA NEGRA</p>
+            <div class="rc-mock-checks">
+              <span>✓ Combate la inflamación crónica</span>
+              <span>✓ Fortalece el sistema inmunológico</span>
+              <span>✓ Reduce el estrés oxidativo</span>
+              <span>✓ Fortalece desde el interior</span>
+            </div>
+          </div>
+        </div>
+        <div class="rc-test-bar">
+          <div><span>🌿</span><small>COMBATE LA INFLAMACIÓN CRÓNICA</small></div>
+          <div><span>🛡️</span><small>PROMUEVE LA SALUD INMUNOLÓGICA</small></div>
+          <div><span>⚡</span><small>REDUCE EL ESTRÉS OXIDATIVO</small></div>
+          <div><span>🍃</span><small>FORTALECE DESDE EL INTERIOR</small></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col">
+        <span class="footer-logo">Orgatics</span>
+        <p>Suplementos naturales de alta potencia, probados en laboratorio y respaldados por ciencia real.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Información</h4>
+        <ul>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Términos del Servicio</a></li>
+          <li><a href="#">Política de Envíos</a></li>
+          <li><a href="#">Política de Reembolso</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="#">Info@tryorgatics.com</a></li>
+          <li><a href="#">+1 307 310 3191</a></li>
+          <li><a href="#">30N Gould Street, Ste R</a></li>
+          <li><a href="#">Sheridan, Wyoming, 82801</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Suscríbete a nuestros correos</h4>
+        <p style="margin-bottom:14px;font-size:12px;">Una frase breve que anime a los clientes a suscribirse.</p>
+        <div class="footer-form">
+          <input type="email" placeholder="Correo electrónico" />
+          <button>Inscribirse</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026, Orgatics. Todos los derechos reservados.</p>
+      <div class="legal-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="#">Política de Envío</a>
+      </div>
+    </div>
+    <div class="disclaimer-bar">
+      <p><strong style="color:rgba(255,255,255,0.4);">Descargo de responsabilidad:</strong> Estas declaraciones no han sido evaluadas por la FDA. Estos productos no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Load product based on URL param
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || '1';
+    const products = {
+      '1': { title: 'Aceite de Orégano y Semilla Negra Orgáticos', icon: '🌿', name: 'Oil of Oregano', mg: '8,000MG', pkgClass: 'pkg-1', badge: '🌿 100% Natural', desc: 'Nuestra fórmula de Aceite de Orégano Silvestre con Aceite de Semilla Negra combina dos de los extractos botánicos más potentes del mundo. Cada cápsula contiene 8,000mg de concentrado activo, diseñado para proporcionar una defensa sistémica completa contra la inflamación crónica.' },
+      '2': { title: 'Extracto de Ajo Envejecido sin Olor, Cápsulas Blandas de 7500 mg', icon: '🧄', name: 'Aged Garlic Extract', mg: '7,500MG', pkgClass: 'pkg-2', badge: '🧄 Sin Olor', desc: 'Extracto de ajo envejecido odorless con 7,500mg de potencia activa por porción. Nuestro proceso patentado de envejecimiento elimina el olor picante conservando todos los compuestos bioactivos beneficiosos como la aliína, alicina y S-alilcisteína.' },
+    };
+    const p = products[id] || products['1'];
+    document.getElementById('prod-title').textContent = p.title;
+    document.getElementById('bread-name').textContent = p.title;
+    document.getElementById('pkg-icon').textContent = p.icon;
+    document.getElementById('pkg-name').textContent = p.name;
+    document.getElementById('pkg-mg').textContent = p.mg;
+    document.getElementById('prod-badge1').textContent = p.badge;
+    document.getElementById('prod-desc').textContent = p.desc;
+    const pkg = document.getElementById('main-pkg');
+    pkg.className = 'product-pkg ' + p.pkgClass;
+
+    // Size selection
+    function selectSize(btn, name) {
+      if (btn.classList.contains('unavailable')) return;
+      document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('selected-size').textContent = name;
+    }
+
+    // Qty
+    function changeQty(delta) {
+      const inp = document.getElementById('qty-input');
+      const val = Math.max(1, Math.min(99, parseInt(inp.value) + delta));
+      inp.value = val;
+    }
+
+    // Cart state
+    let cartItems = [];
+    let cartCount = 0;
+
+    function addToCart() {
+      const size = document.getElementById('selected-size').textContent;
+      const qty = parseInt(document.getElementById('qty-input').value);
+      cartItems.push({ icon: p.icon, title: p.title, size, qty, price: 44.95 });
+      cartCount += qty;
+      document.getElementById('cart-count').textContent = cartCount;
+      renderCart();
+      showToast();
+    }
+
+    function renderCart() {
+      const empty = document.getElementById('cart-empty');
+      const items = document.getElementById('cart-items');
+      if (cartItems.length === 0) { empty.style.display = 'flex'; items.style.display = 'none'; return; }
+      empty.style.display = 'none';
+      items.style.display = 'flex';
+      items.innerHTML = cartItems.map((item, i) => `
+        <div class="cart-item">
+          <div class="cart-item-img">${item.icon}</div>
+          <div class="cart-item-info">
+            <strong>${item.title.substring(0,35)}...</strong>
+            <span>${item.size} · Qty: ${item.qty}</span>
+          </div>
+          <span class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</span>
+          <button class="cart-remove" onclick="removeItem(${i})">✕</button>
+        </div>`).join('');
+      const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+      document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
+    }
+
+    function removeItem(i) {
+      cartCount -= cartItems[i].qty;
+      cartItems.splice(i, 1);
+      document.getElementById('cart-count').textContent = cartCount;
+      renderCart();
+    }
+
+    function showToast() {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function openCart() { document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow = ''; }
+    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); document.getElementById('mobile-overlay').classList.toggle('open'); }
+    function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('mobile-overlay').classList.remove('open'); }
+
+    // Cambio de imagen principal al hacer clic en thumbnails
+    function switchImg(src, thumb) {
+      const main = document.getElementById('main-product-img');
+      if (main) {
+        main.style.opacity = '0';
+        setTimeout(() => { main.src = src; main.style.opacity = '1'; main.style.display = 'block'; }, 150);
+      }
+      document.querySelectorAll('.thumb').forEach(x => x.classList.remove('active'));
+      thumb.classList.add('active');
+    }
+  </script>
+</body>
+</html>
