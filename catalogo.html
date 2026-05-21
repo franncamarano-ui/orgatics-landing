@@ -75,21 +75,27 @@
     }
     .catalog-meta span { font-size: 13px; color: var(--muted); }
 
-    /* Single product — featured layout */
-    .product-featured {
+    /* Product grid — card style like reference */
+    .product-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-      background: var(--cream);
-      border-radius: 24px;
-      overflow: hidden;
-      padding: 48px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
+      gap: 24px;
+      justify-content: center;
     }
+
+    .product-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.2s;
+      cursor: pointer;
+    }
+    .product-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.1); transform: translateY(-3px); }
+
     .product-img-wrap {
       position: relative;
-      background: var(--white);
-      border-radius: 18px;
+      background: var(--cream);
       overflow: hidden;
       aspect-ratio: 1;
       display: flex;
@@ -102,16 +108,17 @@
       object-fit: cover;
       transition: transform 0.4s ease;
     }
-    .product-img-wrap:hover img { transform: scale(1.04); }
+    .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
     .badge-save {
       position: absolute;
-      top: 16px;
-      left: 16px;
+      bottom: 12px;
+      left: 12px;
       background: var(--green);
       color: var(--white);
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       padding: 5px 12px;
       border-radius: 50px;
@@ -121,82 +128,47 @@
     }
     .badge-lab {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 12px;
+      left: 12px;
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 6px 10px;
+      padding: 5px 10px;
       font-size: 10px;
       font-weight: 700;
       color: var(--green);
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
-
-    .product-info { display: flex; flex-direction: column; gap: 20px; }
-    .product-category {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .product-category::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--green); }
-    .product-info h2 {
-      font-family: var(--font-display);
-      font-size: clamp(22px, 2.8vw, 32px);
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-    }
-    .product-info .tagline {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .product-price-row { display: flex; align-items: center; gap: 14px; }
-    .price-current {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--green);
-      letter-spacing: -0.02em;
-    }
-    .price-original {
-      font-size: 18px;
-      color: #bbb;
-      text-decoration: line-through;
-    }
-    .price-savings {
-      background: #fff3e0;
-      color: #e65100;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 50px;
-    }
-
-    .product-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .pill-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .badge-viral {
+      position: absolute;
+      top: 12px;
+      right: 12px;
       background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 50px;
-      padding: 6px 14px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--black);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
-    .pill-badge svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; }
+
+    .product-card-body { padding: 16px 16px 20px; }
+    .product-info h2 {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--black);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .product-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .price-current { font-size: 20px; font-weight: 800; color: var(--black); }
+    .price-original { font-size: 14px; color: #aaa; text-decoration: line-through; }
 
     .btn-buy {
       display: block;
@@ -204,49 +176,18 @@
       background: var(--green);
       color: var(--white);
       border: none;
-      border-radius: 10px;
-      padding: 16px 24px;
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-buy:hover { background: var(--green-light); transform: translateY(-1px); }
-
-    .btn-details {
-      display: block;
-      width: 100%;
-      background: transparent;
-      color: var(--green);
-      border: 1.5px solid var(--green);
-      border-radius: 10px;
-      padding: 14px 24px;
+      border-radius: 8px;
+      padding: 14px 20px;
       font-family: var(--font-body);
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.03em;
       cursor: pointer;
       text-decoration: none;
       text-align: center;
-      transition: all 0.2s;
+      transition: background 0.2s;
     }
-    .btn-details:hover { background: var(--green); color: var(--white); }
-
-    .product-actions { display: flex; flex-direction: column; gap: 10px; }
-
-    .trust-strip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--muted);
-      justify-content: center;
-      margin-top: 4px;
-    }
-    .trust-strip span { color: var(--success); font-weight: 600; }
+    .btn-buy:hover { background: var(--green-light); }
 
     /* ── FOOTER ── */
     footer { background: var(--black-soft); color: rgba(255,255,255,0.75); padding: 64px 5% 40px; }
@@ -382,56 +323,31 @@
       <span>🌿 Envío gratis a partir de $50</span>
     </div>
 
-    <!-- FEATURED PRODUCT -->
-    <div class="product-featured">
+    <!-- PRODUCT GRID -->
+    <div class="product-grid">
 
-      <div class="product-img-wrap">
-        <img
-          src="https://cdn.shopify.com/s/files/1/0708/3062/0833/files/orgatics-oregano-black-seed-oil.jpg"
-          alt="Orgatics Oregano & Black Seed Oil"
-          onerror="this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&q=80'"
-        />
-        <div class="badge-save">🔥 Save 50%</div>
-        <div class="badge-lab">Lab Tested</div>
-      </div>
-
-      <div class="product-info">
-        <span class="product-category">Suplemento Natural</span>
-        <h2>Orgatics Oregano &amp; Black Seed Oil</h2>
-        <p class="tagline">6,000MG de potencia máxima con aceite de orégano silvestre y semilla negra orgánica. Fórmula de doble acción para inmunidad e inflamación.</p>
-
-        <div class="product-price-row">
-          <span class="price-current">$44.95</span>
-          <span class="price-original">$90.00</span>
-          <span class="price-savings">Ahorras $45.05</span>
+      <a href="/pages/producto" class="product-card" style="text-decoration:none;color:inherit;">
+        <div class="product-img-wrap">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0708/3062/0833/files/orgatics-oregano-black-seed-oil.jpg"
+            alt="Orgatics Oregano & Black Seed Oil"
+            onerror="this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&q=80'"
+          />
+          <div class="badge-lab">🧪 Lab Tested</div>
+          <div class="badge-viral">🔥 Viral on TikTok</div>
+          <div class="badge-save">🌿 Save 50%</div>
         </div>
-
-        <div class="product-badges">
-          <div class="pill-badge">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Sin gluten
+        <div class="product-card-body">
+          <div class="product-info">
+            <h2>Orgatics Oregano &amp; Black Seed Oil</h2>
           </div>
-          <div class="pill-badge">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Sin aditivos
+          <div class="product-price-row">
+            <span class="price-current">$44.95</span>
+            <span class="price-original">$90.00</span>
           </div>
-          <div class="pill-badge">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            60 cápsulas
-          </div>
-          <div class="pill-badge">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Probado en lab
-          </div>
+          <div class="btn-buy">Elegir opciones</div>
         </div>
-
-        <div class="product-actions">
-          <a href="/pages/producto" class="btn-buy">COMPRAR AHORA — $44.95 →</a>
-          <a href="/pages/producto" class="btn-details">Ver detalles del producto</a>
-        </div>
-
-        <p class="trust-strip">🔒 Pago seguro &nbsp;·&nbsp; <span>Envío gratis</span> &nbsp;·&nbsp; Garantía 90 días</p>
-      </div>
+      </a>
 
     </div>
   </div>
