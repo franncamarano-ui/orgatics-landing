@@ -1,0 +1,115 @@
+<style>
+.page-header{text-align:center;padding:48px 5% 32px;border-bottom:1px solid var(--border)}
+.page-header h1{font-family:var(--font-display);font-size:clamp(28px,4vw,40px);letter-spacing:-0.02em}
+.catalog-container{max-width:1120px;margin:0 auto;padding:0 5%}
+.filter-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap}
+.filter-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-label{font-size:13px;font-weight:600;color:var(--muted)}
+.filter-select{appearance:none;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 32px 8px 14px;font-family:var(--font-body);font-size:13px;color:var(--black);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.filter-select:focus{outline:none;border-color:var(--green)}
+.sort-group{display:flex;align-items:center;gap:12px}
+.sort-label{font-size:13px;color:var(--muted)}
+.product-count{font-size:13px;color:var(--muted)}
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:32px 0 80px;max-width:680px}
+.product-card{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--white);transition:box-shadow 0.25s,transform 0.2s;text-decoration:none;color:inherit;display:block}
+.product-card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.1);transform:translateY(-3px)}
+.product-img-wrap{position:relative;background:var(--cream);aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.product-img-wrap img{width:75%;max-width:220px;height:auto;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.18));transition:transform 0.3s}
+.product-card:hover .product-img-wrap img{transform:scale(1.04)}
+.prod-badge{position:absolute;bottom:12px;left:12px;background:var(--green);color:var(--white);font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px}
+.lab-badge{position:absolute;top:12px;left:12px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:9px;font-weight:700;text-align:center;line-height:1.3}
+.viral-badge{position:absolute;top:12px;right:12px;background:var(--purple);color:var(--white);font-size:9px;font-weight:700;padding:5px 8px;border-radius:6px;text-align:center;line-height:1.3}
+.product-info{padding:20px}
+.product-info h2{font-family:var(--font-display);font-size:15px;font-weight:400;line-height:1.3;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.03em}
+.price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.price-sale{font-size:17px;font-weight:700;color:var(--black)}
+.price-original{font-size:14px;color:var(--muted);text-decoration:line-through}
+.btn-options{display:block;width:100%;background:var(--green);color:var(--white);border:none;border-radius:8px;padding:12px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:background 0.2s}
+.btn-options:hover{background:var(--green-light)}
+@media(max-width:768px){.products-grid{grid-template-columns:1fr}.filter-bar{flex-direction:column;align-items:flex-start}}
+</style>
+
+<div class="page-header">
+  <h1>{{ collection.title }}</h1>
+</div>
+
+<div class="catalog-container">
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Filtrar:</span>
+      <select class="filter-select" id="filter-availability" onchange="applyFilters()">
+        <option value="all">Disponibilidad</option>
+        <option value="available">En stock</option>
+        <option value="unavailable">Agotado</option>
+      </select>
+      <select class="filter-select" id="filter-price" onchange="applyFilters()">
+        <option value="all">Precio</option>
+        <option value="under50">Menos de $50</option>
+        <option value="50to100">$50 – $100</option>
+        <option value="over100">Más de $100</option>
+      </select>
+    </div>
+    <div class="sort-group">
+      <span class="sort-label">Ordenar por:</span>
+      <select class="filter-select" id="sort-by" onchange="applyFilters()">
+        <option value="bestselling">El más vendido</option>
+        <option value="price-asc">Precio: menor a mayor</option>
+        <option value="price-desc">Precio: mayor a menor</option>
+      </select>
+      <span class="product-count" id="product-count">{{ collection.products_count }} producto{{ collection.products_count | pluralize: '', 's' }}</span>
+    </div>
+  </div>
+
+  <div class="products-grid" id="products-grid">
+    {% for product in collection.products %}
+      <a href="{{ product.url }}" class="product-card"
+         data-price="{{ product.price | divided_by: 100.0 }}"
+         data-available="{{ product.available }}"
+         data-name="{{ product.title | downcase | escape }}">
+        <div class="product-img-wrap">
+          <div class="lab-badge">LAB<br>TESTED</div>
+          <div class="viral-badge">VIRAL ON<br>TikTok</div>
+          {% if product.featured_image %}
+            <img src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title | escape }}" />
+          {% else %}
+            <div style="font-size:48px;">🌿</div>
+          {% endif %}
+          {% if product.compare_at_price > product.price %}
+            <div class="prod-badge">🌿 AHORRA {{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price }}%</div>
+          {% endif %}
+        </div>
+        <div class="product-info">
+          <h2>{{ product.title }}</h2>
+          <div class="price-row">
+            <span class="price-sale">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span class="price-original">{{ product.compare_at_price | money }}</span>
+            {% endif %}
+          </div>
+          <span class="btn-options">Seleccione opciones</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+function applyFilters() {
+  const avail = document.getElementById('filter-availability').value;
+  const price = document.getElementById('filter-price').value;
+  let count = 0;
+  document.querySelectorAll('.product-card').forEach(c => {
+    let show = true;
+    const p = parseFloat(c.dataset.price);
+    const a = c.dataset.available === 'true';
+    if (avail === 'available' && !a) show = false;
+    if (avail === 'unavailable' && a) show = false;
+    if (price === 'under50' && p >= 50) show = false;
+    if (price === '50to100' && (p < 50 || p > 100)) show = false;
+    if (price === 'over100' && p <= 100) show = false;
+    c.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+  document.getElementById('product-count').textContent = count + ' producto' + (count !== 1 ? 's' : '');
+}
+</script>

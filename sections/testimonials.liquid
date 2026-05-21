@@ -1,0 +1,59 @@
+<style>
+#testimonials{background:var(--white)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testimonial-card{border:1px solid var(--border);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;background:var(--white);transition:box-shadow 0.25s}
+.testimonial-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.08)}
+.stars{display:flex;gap:2px;font-size:16px;color:#fbbf24}
+.testimonial-card blockquote{font-size:14px;line-height:1.75;color:#333;flex:1;font-style:italic}
+.testimonial-footer{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--border)}
+.avatar-photo{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border)}
+.avatar-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--white);flex-shrink:0}
+.testimonial-meta{flex:1}
+.testimonial-meta strong{display:block;font-size:14px;font-weight:700;color:var(--black)}
+.testimonial-meta span{font-size:12px;color:var(--muted)}
+.verified-badge{font-size:11px;font-weight:600;color:var(--success);white-space:nowrap}
+@media(max-width:900px){.testimonials-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.testimonials-grid{grid-template-columns:1fr}}
+</style>
+
+<section id="testimonials" class="section">
+  <div class="section-inner">
+    <div class="section-header"><h2>Lo Que Dicen Nuestros Miembros Reales</h2></div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"He probado tantos boletines e hilos de IA a lo largo de los últimos dos años, y este es el primero con el que realmente sentí una diferencia práctica e inmediata. Menos confusión con las herramientas, más velocidad en mis automatizaciones. Mi cliente principal incluso notó mejoras en mis tiempos de entrega."</blockquote>
+        <div class="testimonial-footer">
+          <img src="https://cdn.shopify.com/s/files/1/0708/3062/0833/files/WOMI1_1.jpg?v=1771331322" alt="Melissa R." class="avatar-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="avatar-circle" style="background:#e57373;display:none;">M</div>
+          <div class="testimonial-meta"><strong>Melissa R.</strong><span>62 años · Consultora Independiente</span></div>
+          <span class="verified-badge">✓ Verificada</span>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Mi socio me sugirió buscar contenido para implementar IA en nuestra academia de formación. El contenido de Remy está estandarizado para la ejecución real del negocio y puedes notar la diferencia en la agilidad de tus procesos a partir de la tercera semana."</blockquote>
+        <div class="testimonial-footer">
+          <img src="https://cdn.shopify.com/s/files/1/0708/3062/0833/files/WOMI2_1.jpg?v=1771331408" alt="Barbara L." class="avatar-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="avatar-circle" style="background:#64b5f6;display:none;">B</div>
+          <div class="testimonial-meta"><strong>Barbara L.</strong><span>55 años · Creadora de Contenido Educativo</span></div>
+          <span class="verified-badge">✓ Verificada</span>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Tras 4 semanas leyendo el boletín, la parálisis por el exceso de información se calmaba por completo. Me siento más ligero al trabajar, automatizo mejor y tengo mucha más energía libre en las mañanas para pensar la estrategia del negocio."</blockquote>
+        <div class="testimonial-footer">
+          <img src="https://cdn.shopify.com/s/files/1/0708/3062/0833/files/WOMI3_1.jpg?v=1771331505" alt="Tanya G." class="avatar-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="avatar-circle" style="background:#81c784;display:none;">T</div>
+          <div class="testimonial-meta"><strong>Tanya G.</strong><span>58 años · Propietaria de Tienda E-commerce</span></div>
+          <span class="verified-badge">✓ Verificada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Testimonials", "settings": [] }
+{% endschema %}

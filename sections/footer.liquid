@@ -1,0 +1,52 @@
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-col">
+      <span class="footer-logo">{{ shop.name }}</span>
+      <p>Suplementos naturales de alta potencia, probados en laboratorio y respaldados por ciencia real.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Información</h4>
+      <ul>
+        <li><a href="{{ routes.root_url }}policies/privacy-policy">Política de Privacidad</a></li>
+        <li><a href="{{ routes.root_url }}policies/terms-of-service">Términos del Servicio</a></li>
+        <li><a href="{{ routes.root_url }}policies/shipping-policy">Política de Envíos</a></li>
+        <li><a href="{{ routes.root_url }}policies/refund-policy">Política de Reembolso</a></li>
+        <li><a href="{{ routes.root_url }}pages/contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="mailto:{{ shop.email }}">{{ shop.email }}</a></li>
+        <li><a href="tel:{{ shop.phone }}">{{ shop.phone }}</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Suscríbete a nuestros correos</h4>
+      <p style="margin-bottom:14px;font-size:12px;">Acceso instantáneo a contenido exclusivo.</p>
+      {% form 'customer' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="footer-form">
+          <input type="email" name="contact[email]" placeholder="Correo electrónico" required />
+          <button type="submit">Inscribirse</button>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© {{ 'now' | date: '%Y' }}, {{ shop.name }}. Todos los derechos reservados.</p>
+    <div class="footer-legal">
+      <a href="{{ routes.root_url }}policies/privacy-policy">Privacidad</a>
+      <a href="{{ routes.root_url }}policies/terms-of-service">Términos</a>
+      <a href="{{ routes.root_url }}pages/contacto">Contacto</a>
+      <a href="{{ routes.root_url }}policies/shipping-policy">Política de Envío</a>
+    </div>
+  </div>
+  <div class="footer-disclaimer">
+    <strong style="color:rgba(255,255,255,0.4);">Descargo de responsabilidad:</strong> Estas declaraciones no han sido evaluadas por la FDA. Estos productos no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad.
+  </div>
+</footer>
+
+{% schema %}
+{ "name": "Footer", "settings": [] }
+{% endschema %}

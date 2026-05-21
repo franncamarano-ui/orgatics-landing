@@ -1,0 +1,80 @@
+<style>
+#hero{background:var(--cream);padding:72px 5% 80px}
+.hero-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center}
+.hero-visual{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(145deg,#0a5945 0%,#0d6b51 40%,#1a8b6a 70%,#a8d5c5 100%);aspect-ratio:4/5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;box-shadow:0 24px 60px rgba(10,89,69,0.25)}
+.newsletter-card{position:relative;z-index:1;background:rgba(255,255,255,0.97);border-radius:14px;padding:28px 24px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.12)}
+.issue-badge{display:inline-block;background:var(--green);color:var(--white);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:14px}
+.newsletter-card h3{font-family:var(--font-display);font-size:16px;line-height:1.35;color:var(--black);margin-bottom:12px}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.nl-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.item-dot{width:6px;height:6px;background:var(--green);border-radius:50%;margin-top:7px;flex-shrink:0}
+.nl-item p{font-size:11px;color:var(--muted);line-height:1.5}
+.nl-item strong{font-size:11px;color:var(--black);font-weight:600;display:block}
+.hero-sub-badge{position:absolute;bottom:20px;right:-8px;background:var(--white);border-radius:50px;padding:8px 14px 8px 10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:var(--black)}
+.avatars{display:flex}
+.avatars span{width:24px;height:24px;border-radius:50%;border:2px solid var(--white);margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--white)}
+.avatars span:first-child{margin-left:0;background:#e57373}
+.avatars span:nth-child(2){background:#64b5f6}
+.avatars span:nth-child(3){background:#81c784}
+.hero-copy{display:flex;flex-direction:column;gap:24px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--green)}
+.eyebrow::before{content:'';display:inline-block;width:24px;height:2px;background:var(--green)}
+.hero-copy h1{font-family:var(--font-display);font-size:clamp(28px,3.5vw,44px);line-height:1.2;color:var(--black);letter-spacing:-0.02em}
+.hero-copy p{font-size:16px;color:#444;line-height:1.7;max-width:480px}
+.hero-form{display:flex;flex-direction:column;gap:10px}
+.input-row{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--white);transition:border-color 0.2s}
+.input-row:focus-within{border-color:var(--green)}
+.input-row input{flex:1;border:none;outline:none;padding:14px 16px;font-family:var(--font-body);font-size:14px;color:var(--black);background:transparent}
+.input-row button{background:var(--green);color:var(--white);border:none;padding:14px 20px;font-family:var(--font-body);font-size:13px;font-weight:700;letter-spacing:0.05em;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+.input-row button:hover{background:var(--green-light)}
+.micro-copy{font-size:12px;color:var(--muted)}
+.form-success-hero{display:none;background:#e8f5e9;border:1px solid var(--success);color:#1b5e20;border-radius:8px;padding:12px 16px;font-size:14px;text-align:center}
+.form-success-hero.show{display:block}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:32px}.hero-copy{order:-1}.hero-visual{aspect-ratio:4/3;min-height:unset;padding:24px 20px 44px;border-radius:16px}.newsletter-card{padding:18px 16px;max-width:100%}.newsletter-card h3{font-size:14px}}
+@media(max-width:768px){#hero{padding:40px 16px 56px}.hero-copy h1{font-size:clamp(22px,6vw,30px)}.input-row{flex-direction:column;border:none;gap:10px;background:transparent}.input-row input{border:1.5px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--white)}.input-row button{border-radius:8px;padding:14px}}
+</style>
+
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-visual">
+      <div class="newsletter-card">
+        <span class="issue-badge">Edición #001 · Semana 1</span>
+        <h3>Los 3 flujos de trabajo que automatizan el 80% de tus tareas repetitivas</h3>
+        <div class="divider"></div>
+        <div class="nl-item"><div class="item-dot"></div><div><strong>Flujo de Trabajo #1</strong><p>Automatización de contenido con Claude + Zapier en 12 minutos exactos.</p></div></div>
+        <div class="nl-item"><div class="item-dot"></div><div><strong>Prompt de la Semana</strong><p>Estructura de ingeniería con variables dinámicas. Lista para copiar.</p></div></div>
+        <div class="nl-item"><div class="item-dot"></div><div><strong>Tutorial 5 Min</strong><p>Cómo crear un agente personalizado sin una sola línea de código.</p></div></div>
+      </div>
+      <div class="hero-sub-badge">
+        <div class="avatars"><span>M</span><span>B</span><span>T</span></div>
+        +2.400 suscriptores activos
+      </div>
+    </div>
+    <div class="hero-copy">
+      <span class="eyebrow">Boletín Semanal de IA Práctica</span>
+      <h1>No dejes que la parálisis por la IA detenga el crecimiento de tu negocio. Elige la fórmula semanal que domina los flujos de trabajo.</h1>
+      <p>Construye más rápido, mantén tu negocio ágil y convierte la IA en una verdadera ventaja competitiva para tu negocio sin lidiar con código basura.</p>
+      <div class="hero-form">
+        <div class="input-row">
+          <input type="email" id="hero-email" placeholder="Introduce tu correo electrónico principal..." autocomplete="email" />
+          <button onclick="subscribeHero()">EMPEZAR A CONSTRUIR MÁS RÁPIDO →</button>
+        </div>
+        <div class="form-success-hero" id="hero-success">✅ ¡Perfecto! Revisa tu bandeja de entrada — la primera entrega está en camino.</div>
+        <p class="micro-copy">🔒 Únete a miles de creadores que decidieron empezar a ejecutar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function subscribeHero() {
+  const email = document.getElementById('hero-email').value.trim();
+  if (!email || !email.includes('@')) { document.getElementById('hero-email').style.borderColor = '#e57373'; return; }
+  document.getElementById('hero-success').classList.add('show');
+  document.getElementById('hero-email').value = '';
+}
+</script>
+
+{% schema %}
+{ "name": "Hero", "settings": [] }
+{% endschema %}

@@ -1,0 +1,168 @@
+<style>
+.breadcrumb{max-width:1120px;margin:0 auto;padding:16px 5% 0;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--muted);text-decoration:none}.breadcrumb a:hover{color:var(--green)}
+.product-detail{max-width:1120px;margin:0 auto;padding:32px 5% 80px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.product-gallery{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px}
+.main-image{background:var(--cream);border-radius:20px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.main-image img{width:80%;max-width:280px;height:auto;object-fit:contain;filter:drop-shadow(0 16px 40px rgba(0,0,0,0.18));transition:opacity 0.25s}
+.img-badge{position:absolute;top:16px;left:16px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:10px;font-weight:700;text-align:center;line-height:1.3}
+.viral-badge{position:absolute;top:16px;right:16px;background:var(--purple);color:var(--white);font-size:9px;font-weight:700;padding:6px 9px;border-radius:6px;text-align:center;line-height:1.3}
+.sale-ribbon{position:absolute;bottom:16px;left:16px;background:var(--green);color:var(--white);font-size:11px;font-weight:700;padding:6px 12px;border-radius:20px}
+.thumb-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.thumb{aspect-ratio:1;border-radius:8px;border:2px solid transparent;cursor:pointer;overflow:hidden;transition:border-color 0.2s}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb.active{border-color:var(--green)}
+.thumb:hover{border-color:var(--green)}
+.product-info{display:flex;flex-direction:column;gap:24px}
+.product-badges{display:flex;gap:8px;flex-wrap:wrap}
+.pbadge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px}
+.pbadge-green{background:rgba(10,89,69,0.1);color:var(--green)}
+.pbadge-purple{background:rgba(109,56,139,0.1);color:var(--purple)}
+.product-info h1{font-family:var(--font-display);font-size:clamp(22px,3vw,30px);line-height:1.25;letter-spacing:-0.02em}
+.rating-row{display:flex;align-items:center;gap:8px}
+.stars{color:#fbbf24;font-size:16px}
+.rating-count{font-size:13px;color:var(--muted)}
+.price-section{padding:20px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.price-main{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.price-current{font-size:28px;font-weight:700}
+.price-was{font-size:16px;color:var(--muted);text-decoration:line-through}
+.price-save{font-size:13px;font-weight:700;color:var(--success);background:rgba(0,182,122,0.1);padding:3px 10px;border-radius:20px}
+.price-note{font-size:12px;color:var(--muted)}
+.option-section{display:flex;flex-direction:column;gap:12px}
+.option-label{font-size:13px;font-weight:700}
+.option-label span{font-weight:400;color:var(--muted)}
+.option-btns{display:flex;gap:8px;flex-wrap:wrap}
+.opt-btn{padding:10px 20px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;background:var(--white);transition:all 0.15s}
+.opt-btn:hover,.opt-btn.selected{border-color:var(--green);background:var(--green);color:var(--white)}
+.qty-row{display:flex;align-items:center;gap:12px}
+.qty-ctrl{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
+.qty-btn{width:40px;height:44px;border:none;background:transparent;font-size:18px;cursor:pointer;transition:background 0.15s}
+.qty-btn:hover{background:var(--cream)}
+.qty-num{width:48px;text-align:center;font-size:15px;font-weight:600;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);height:44px;font-family:var(--font-body)}
+.btn-add-cart{flex:1;background:var(--green);color:var(--white);border:none;border-radius:10px;padding:15px 24px;font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s}
+.btn-add-cart:hover{background:var(--green-light)}
+.trust-badges{display:flex;gap:16px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:var(--white);padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:500;transition:transform 0.3s ease;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:900px){.product-detail{grid-template-columns:1fr;gap:32px}.product-gallery{position:static}}
+@media(max-width:768px){.product-detail{padding:20px 16px 60px}}
+</style>
+
+<div class="breadcrumb">
+  <a href="{{ routes.root_url }}">Inicio</a>
+  <span>›</span>
+  <a href="{{ product.collections.first.url }}">Catálogo</a>
+  <span>›</span>
+  <span>{{ product.title }}</span>
+</div>
+
+<div class="product-detail">
+  <div class="product-gallery">
+    <div class="main-image">
+      <div class="img-badge">LAB<br>TESTED</div>
+      <div class="viral-badge">VIRAL ON<br>TikTok</div>
+      <img src="{{ product.featured_image | img_url: '600x600' }}" id="main-img" alt="{{ product.title | escape }}" />
+      {% if product.compare_at_price > product.price %}
+        <div class="sale-ribbon">🌿 AHORRA UN 50%</div>
+      {% endif %}
+    </div>
+    <div class="thumb-row">
+      {% for image in product.images limit: 7 %}
+        <div class="thumb {% if forloop.first %}active{% endif %}" onclick="switchImg('{{ image | img_url: '600x600' }}', this)">
+          <img src="{{ image | img_url: '120x120' }}" alt="{{ image.alt | escape }}" />
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="product-info">
+    <div class="product-badges">
+      <span class="pbadge pbadge-green">🌿 100% Natural</span>
+      <span class="pbadge pbadge-purple">Lab Tested</span>
+      <span class="pbadge pbadge-green">Sin Rellenos</span>
+    </div>
+
+    <h1>{{ product.title }}</h1>
+
+    <div class="rating-row">
+      <span class="stars">★★★★★</span>
+      <span class="rating-count">4.9 (2,847 reseñas)</span>
+    </div>
+
+    <div class="price-section">
+      <div class="price-main">
+        <span class="price-current">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="price-was">{{ product.compare_at_price | money }}</span>
+          <span class="price-save">Ahorras 50%</span>
+        {% endif %}
+      </div>
+      <p class="price-note">Precio incluye impuestos. Envío calculado al finalizar la compra.</p>
+    </div>
+
+    {% form 'product', product %}
+      {% for option in product.options_with_values %}
+        <div class="option-section">
+          <p class="option-label">{{ option.name }}: <span id="selected-{{ option.name | handleize }}">{{ option.selected_value }}</span></p>
+          <div class="option-btns">
+            {% for value in option.values %}
+              <button type="button" class="opt-btn {% if value == option.selected_value %}selected{% endif %}"
+                onclick="selectOption(this, '{{ option.name | handleize }}', '{{ value | escape }}')">
+                {{ value }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}" />
+
+      <div class="option-section">
+        <p class="option-label">Cantidad</p>
+        <div class="qty-row">
+          <div class="qty-ctrl">
+            <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input class="qty-num" type="number" name="quantity" value="1" min="1" max="99" id="qty-input" />
+            <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+          <button type="submit" name="add" class="btn-add-cart" onclick="showToast()">Agregar al carrito</button>
+        </div>
+      </div>
+    {% endform %}
+
+    <div class="trust-badges">
+      <div class="trust-item"><span>🚚</span> Envío gratis +$50</div>
+      <div class="trust-item"><span>🔒</span> Pago seguro</div>
+      <div class="trust-item"><span>↩️</span> Devolución 90 días</div>
+      <div class="trust-item"><span>✅</span> Stock disponible</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Producto agregado al carrito</div>
+
+<script>
+function switchImg(src, thumb) {
+  const img = document.getElementById('main-img');
+  img.style.opacity = '0';
+  setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 150);
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+function changeQty(d) {
+  const inp = document.getElementById('qty-input');
+  inp.value = Math.max(1, Math.min(99, parseInt(inp.value) + d));
+}
+function selectOption(btn, name, value) {
+  btn.closest('.option-btns').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('selected-' + name).textContent = value;
+}
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => { t.classList.remove('show'); }, 2500);
+  setTimeout(() => { document.getElementById('cart-count').textContent = parseInt(document.getElementById('cart-count').textContent || 0) + parseInt(document.getElementById('qty-input').value); }, 500);
+}
+</script>

@@ -1,0 +1,27 @@
+<style>
+#guarantee{background:var(--white);text-align:center}
+.guarantee-wrap{display:flex;justify-content:center}
+.guarantee-badge{display:inline-flex;flex-direction:column;align-items:center;gap:24px;border:2px solid var(--border);border-radius:24px;padding:56px 72px;max-width:680px;width:100%;position:relative}
+.guarantee-badge::before{content:'';position:absolute;inset:-2px;border-radius:24px;background:linear-gradient(135deg,var(--green),var(--purple));z-index:-1}
+.guarantee-badge::after{content:'';position:absolute;inset:0;border-radius:22px;background:var(--white);z-index:-1}
+.shield-icon{width:80px;height:80px;background:var(--cream);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px}
+.guarantee-badge h2{font-family:var(--font-display);font-size:clamp(22px,2.5vw,30px);line-height:1.25;letter-spacing:-.02em}
+.guarantee-badge p{font-size:15px;color:#555;line-height:1.75;max-width:480px}
+@media(max-width:768px){.guarantee-badge{padding:40px 20px}}
+</style>
+
+<section id="guarantee" class="section">
+  <div class="section-inner">
+    <div class="guarantee-wrap">
+      <div class="guarantee-badge">
+        <div class="shield-icon">🛡️</div>
+        <h2>Garantía de Cero Spam y Desuscripción Absoluta</h2>
+        <p>¿No encuentras valor práctico real dentro de las primeras entregas? Puedes darte de baja en cualquier momento con un solo clic desde tu correo. Sin preguntas molestas, sin correos de retención. Todo el material previo te lo quedas para siempre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Guarantee", "settings": [] }
+{% endschema %}
