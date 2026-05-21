@@ -1,0 +1,497 @@
+﻿{% layout none %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto — Orgatics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #0a5945; --green-light: #0d7a60; --purple: #6d388b;
+      --cream: #f5f1eb; --cream-dark: #ede8e0; --black: #121212; --black-soft: #1a1a1a;
+      --success: #00b67a; --white: #ffffff; --border: #dbdbdb; --muted: #6b6b6b;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+
+    /* ── ANNOUNCE BAR ── */
+    .announce-bar { background: var(--green); color: var(--white); text-align: center; padding: 10px 16px; font-size: 13px; font-weight: 500; }
+    .announce-bar a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── NAV ── */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 5%; height: 64px; gap: 16px; }
+    .nav-left { display: flex; align-items: center; }
+    .nav-logo { font-family: var(--font-display); font-size: 22px; color: var(--green); text-decoration: none; letter-spacing: -0.01em; justify-self: center; white-space: nowrap; }
+    .nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--black); text-decoration: none; opacity: 0.72; transition: opacity 0.2s; padding: 6px 12px; border-radius: 6px; }
+    .nav-links a:hover { opacity: 1; background: #f5f5f5; }
+    .nav-cta { background: var(--green) !important; color: var(--white) !important; padding: 8px 18px !important; border-radius: 6px; font-size: 13px !important; font-weight: 600 !important; opacity: 1 !important; }
+    .nav-cta:hover { background: var(--green-light) !important; }
+    .nav-active { background: var(--cream) !important; color: var(--green) !important; opacity: 1 !important; font-weight: 700 !important; }
+    .nav-icon-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; position: relative; }
+    .nav-icon-btn:hover { background: var(--cream); }
+    .nav-icon-btn svg { width: 18px; height: 18px; stroke: var(--black); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .cart-count { position: absolute; top: -5px; right: -5px; width: 17px; height: 17px; background: var(--green); color: var(--white); border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--black); border-radius: 2px; }
+    .mobile-menu { display: none; }
+    .mobile-menu-overlay { display: none; }
+
+    /* ── CONTACT PAGE ── */
+    .contact-wrapper { max-width: 760px; margin: 0 auto; padding: 64px 5% 80px; }
+
+    .contact-wrapper h1 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 40px);
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 48px;
+    }
+
+    /* Form */
+    .contact-form { display: flex; flex-direction: column; gap: 0; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-field { display: flex; flex-direction: column; gap: 0; margin-bottom: 12px; }
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+    .form-field input:focus,
+    .form-field textarea:focus { border-color: var(--green); }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: #aaa; }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+    .btn-send {
+      display: block;
+      width: 100%;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+    .btn-send:hover { background: var(--green-light); }
+
+    .form-success,
+    .form-error {
+      display: none;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+    .form-success { background: #e8f5e9; border: 1px solid var(--success); color: #1b5e20; }
+    .form-error   { background: #fff3f3; border: 1px solid #ffcdd2; color: #c62828; }
+    .form-error a { color: #b71c1c; }
+    .form-success.show, .form-error.show { display: block; }
+    .btn-send:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    /* Contact info section */
+    .contact-info-section {
+      margin-top: 72px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .contact-info-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 30px);
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: -0.02em;
+    }
+    .contact-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .info-card {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .info-card .info-icon { font-size: 28px; margin-bottom: 4px; }
+    .info-card h4 { font-size: 14px; font-weight: 700; color: var(--green); }
+    .info-card p { font-size: 13px; color: #555; line-height: 1.6; }
+
+    .company-block {
+      background: var(--black-soft);
+      color: rgba(255,255,255,0.75);
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .company-block h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 12px; }
+    .company-block p { font-size: 13px; line-height: 1.7; }
+    .company-block strong { color: var(--white); }
+
+    /* Search + Cart */
+    .search-wrapper { position: relative; }
+    .search-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.12); padding: 12px; z-index: 200; }
+    .search-dropdown.open { display: block; }
+    .search-dropdown input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: var(--font-body); font-size: 14px; outline: none; }
+    .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 300; }
+    .cart-overlay.open { display: block; }
+    .cart-drawer { position: fixed; top: 0; right: -400px; width: 360px; height: 100vh; background: var(--white); box-shadow: -8px 0 40px rgba(0,0,0,0.15); z-index: 301; display: flex; flex-direction: column; transition: right 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .cart-drawer.open { right: 0; }
+    .cart-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .cart-drawer-header h3 { font-family: var(--font-display); font-size: 18px; }
+    .cart-close { width: 32px; height: 32px; border: none; background: #f5f5f5; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .cart-drawer-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; color: var(--muted); }
+    .cart-drawer-body .empty-icon { font-size: 48px; opacity: 0.4; }
+    .cart-drawer-body p { font-size: 14px; text-align: center; }
+    .cart-drawer-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
+    .cart-checkout-btn { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 8px; padding: 14px; font-family: var(--font-body); font-size: 14px; font-weight: 700; cursor: pointer; opacity: 0.5; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--black-soft); color: rgba(255,255,255,0.75); padding: 64px 5% 40px; }
+    .footer-top { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.5fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .footer-col h4 { color: var(--white); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-col p { font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.45); }
+    .footer-logo { font-family: var(--font-display); font-size: 22px; color: var(--white); margin-bottom: 12px; display: block; }
+    .footer-form { display: flex; flex-direction: column; gap: 10px; }
+    .footer-form input { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 11px 14px; font-family: var(--font-body); font-size: 13px; color: var(--white); outline: none; }
+    .footer-form input::placeholder { color: rgba(255,255,255,0.35); }
+    .footer-form button { background: var(--white); color: var(--black); border: none; border-radius: 6px; padding: 11px; font-family: var(--font-body); font-size: 13px; font-weight: 700; cursor: pointer; }
+    .footer-bottom { max-width: 1120px; margin: 32px auto 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.35); }
+    .footer-bottom .legal-links { display: flex; gap: 20px; }
+    .footer-bottom .legal-links a { font-size: 11px; color: rgba(255,255,255,0.4); text-decoration: none; }
+    .footer-bottom .legal-links a:hover { color: rgba(255,255,255,0.75); }
+    .disclaimer-bar { max-width: 1120px; margin: 24px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .disclaimer-bar p { font-size: 11px; color: rgba(255,255,255,0.28); line-height: 1.7; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { grid-template-columns: auto 1fr auto; padding: 0 16px; gap: 0; }
+      .nav-left { display: none; }
+      .nav-logo { display: block; text-align: center; font-size: 20px; }
+      .nav-hamburger { display: flex; order: -1; }
+      .form-row { grid-template-columns: 1fr; }
+      .contact-info-grid { grid-template-columns: 1fr; }
+      .company-block { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      /* Menú móvil con animación slide — usar transform en lugar de display:none para que la transición funcione */
+      .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        position: fixed; top: 0; left: 0; width: 80vw; max-width: 300px; height: 100vh;
+        background: var(--white); z-index: 400; padding: 24px 20px;
+        box-shadow: 4px 0 32px rgba(0,0,0,0.15);
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        pointer-events: none;
+      }
+      .mobile-menu.open { transform: translateX(0); pointer-events: auto; }
+      .mobile-menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 399; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+      .mobile-menu-overlay.open { display: block; opacity: 1; pointer-events: auto; }
+      .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+      .mobile-menu-header .logo { font-family: var(--font-display); font-size: 20px; color: var(--green); }
+      .mobile-menu-close { width: 32px; height: 32px; background: #f5f5f5; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+      .mobile-menu ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+      .mobile-menu ul li a { display: block; padding: 13px 14px; font-size: 16px; font-weight: 500; color: var(--black); text-decoration: none; border-radius: 8px; }
+      .mobile-menu ul li a:hover { background: var(--cream); }
+      .mobile-menu ul li a.cta-mobile { margin-top: 12px; background: var(--green); color: var(--white); text-align: center; font-weight: 700; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announce-bar">
+    🚀 Únete gratis hoy &mdash; Acceso inmediato a la primera entrega &nbsp;|&nbsp; <a href="/">Suscríbete ahora →</a>
+  </div>
+
+  <nav>
+    <div class="nav-left">
+      <ul class="nav-links">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/pages/catalogo">Catálogo</a></li>
+        <li><a href="/pages/contacto" class="nav-active">Contacto</a></li>
+        <li><a href="/pages/rastreo">Rastrea tu producto</a></li>
+      </ul>
+    </div>
+    <a href="/" class="nav-logo">Orgatics</a>
+    <div class="nav-right">
+      <div class="search-wrapper">
+        <button class="nav-icon-btn" aria-label="Buscar" onclick="document.getElementById('search-dropdown').classList.toggle('open')">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+        </button>
+        <div class="search-dropdown" id="search-dropdown">
+          <input type="text" placeholder="Buscar..." />
+        </div>
+      </div>
+      <button class="nav-icon-btn" aria-label="Carrito" onclick="openCart()">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </button>
+      <div class="nav-hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="logo">Orgatics</span>
+      <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <ul>
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/pages/catalogo">Catálogo</a></li>
+      <li><a href="/pages/contacto">Contacto</a></li>
+      <li><a href="/pages/rastreo">Rastrea tu producto</a></li>
+      <li><a href="index.html#hero" class="cta-mobile">Suscribirse gratis →</a></li>
+    </ul>
+  </div>
+
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Tu Carrito</h3>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-drawer-body">
+      <div class="empty-icon">🛍️</div>
+      <p>Tu carrito está vacío.</p>
+    </div>
+    <div class="cart-drawer-footer">
+      <button class="cart-checkout-btn">Ir al checkout →</button>
+    </div>
+  </div>
+
+  <!-- CONTACT CONTENT -->
+  <div class="contact-wrapper">
+    <h1>Ponte en contacto</h1>
+
+    <form class="contact-form" id="contact-form" onsubmit="sendForm(event)" novalidate>
+
+
+      <div class="form-row">
+        <div class="form-field">
+          <input type="text" id="f-nombre" name="nombre" placeholder="Nombre" required autocomplete="given-name" />
+        </div>
+        <div class="form-field">
+          <input type="text" id="f-apellido" name="apellido" placeholder="Apellido" required autocomplete="family-name" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <input type="email" id="f-email" name="email" placeholder="Correo electrónico" required autocomplete="email" />
+        </div>
+        <div class="form-field">
+          <input type="tel" id="f-telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel" />
+        </div>
+      </div>
+      <div class="form-field">
+        <textarea id="f-comentario" name="comentario" placeholder="Comentario" rows="5"></textarea>
+      </div>
+
+      <button type="submit" class="btn-send" id="btn-send">
+        <span id="btn-text">Enviar</span>
+        <span id="btn-spinner" style="display:none;">Enviando…</span>
+      </button>
+
+      <!-- Estados del formulario -->
+      <div class="form-success" id="form-success">
+        ✅ ¡Mensaje enviado! Te responderemos en menos de 24 horas.
+      </div>
+      <div class="form-error" id="form-error">
+        ⚠️ Hubo un problema al enviar. Intenta nuevamente o escríbenos a <a href="mailto:info@tryorgatics.com">info@tryorgatics.com</a>
+      </div>
+
+    </form>
+
+    <!-- CONTACT INFO -->
+    <div class="contact-info-section">
+      <h2>Información del contacto</h2>
+      <div class="contact-info-grid">
+        <div class="info-card">
+          <div class="info-icon">📧</div>
+          <h4>Correo electrónico</h4>
+          <p>Info@tryorgatics.com</p>
+          <p>Tiempo de respuesta:<br><strong>30 minutos – 24 horas</strong></p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📞</div>
+          <h4>Teléfono</h4>
+          <p>+1 307 310 3191</p>
+          <p>Lunes a viernes:<br><strong>09:00 – 17:00 GMT</strong></p>
+          <p>Sábados y domingos:<br><strong>10:00 – 16:00 GMT</strong></p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">⏰</div>
+          <h4>Horario de atención</h4>
+          <p>Lunes a viernes<br><strong>09:00 – 17:00 GMT</strong></p>
+          <p>Fines de semana<br><strong>10:00 – 16:00 GMT</strong></p>
+        </div>
+      </div>
+
+      <div class="company-block">
+        <div>
+          <h4>Dirección de la empresa</h4>
+          <p>30N Gould Street, Ste R<br>Sheridan, Wyoming, 82801<br>Estados Unidos</p>
+        </div>
+        <div>
+          <h4>Información legal</h4>
+          <p>Nombre de la empresa:<br><strong>MORECOMMERCE VENTURES LLC</strong></p>
+          <p style="margin-top:8px;">Soporte: <strong>info@tryorgatics.com</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-col">
+        <span class="footer-logo">Orgatics</span>
+        <p>Suplementos naturales de alta potencia, probados en laboratorio y respaldados por ciencia real.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Información</h4>
+        <ul>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Términos del Servicio</a></li>
+          <li><a href="#">Política de Envíos</a></li>
+          <li><a href="#">Política de Reembolso</a></li>
+          <li><a href="/pages/contacto">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="#">Info@tryorgatics.com</a></li>
+          <li><a href="#">+1 307 310 3191</a></li>
+          <li><a href="#">30N Gould Street, Ste R</a></li>
+          <li><a href="#">Sheridan, Wyoming, 82801</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Suscríbete a nuestros correos</h4>
+        <p style="margin-bottom:14px;font-size:12px;">Una frase breve que anime a los clientes a suscribirse.</p>
+        <div class="footer-form">
+          <input type="email" placeholder="Correo electrónico" />
+          <button>Inscribirse</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026, Orgatics. Todos los derechos reservados.</p>
+      <div class="legal-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="/pages/contacto">Contacto</a>
+        <a href="#">Política de Envío</a>
+      </div>
+    </div>
+    <div class="disclaimer-bar">
+      <p><strong style="color:rgba(255,255,255,0.4);">Descargo de responsabilidad:</strong> Estas declaraciones no han sido evaluadas por la FDA. Estos productos no están destinados a diagnosticar, tratar, curar ni prevenir ninguna enfermedad.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ── CAMBIA SOLO ESTA LÍNEA con tu ID de Formspree ──
+    const FORMSPREE_ID = 'xdajebop';
+
+    async function sendForm(e) {
+      e.preventDefault();
+
+      const btn     = document.getElementById('btn-send');
+      const btnText = document.getElementById('btn-text');
+      const spinner = document.getElementById('btn-spinner');
+      const success = document.getElementById('form-success');
+      const error   = document.getElementById('form-error');
+
+      // Validación básica
+      const nombre = document.getElementById('f-nombre').value.trim();
+      const email  = document.getElementById('f-email').value.trim();
+      if (!nombre) { document.getElementById('f-nombre').style.borderColor = '#e57373'; document.getElementById('f-nombre').focus(); return; }
+      if (!email)  { document.getElementById('f-email').style.borderColor  = '#e57373'; document.getElementById('f-email').focus();  return; }
+      document.getElementById('f-nombre').style.borderColor = '';
+      document.getElementById('f-email').style.borderColor  = '';
+
+      // UI: loading
+      btn.disabled           = true;
+      btnText.style.display  = 'none';
+      spinner.style.display  = 'inline';
+      success.classList.remove('show');
+      error.classList.remove('show');
+
+      try {
+        const res = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            nombre:     nombre,
+            apellido:   document.getElementById('f-apellido').value.trim(),
+            email:      email,
+            telefono:   document.getElementById('f-telefono').value.trim(),
+            comentario: document.getElementById('f-comentario').value.trim(),
+          }),
+        });
+
+        if (res.ok) {
+          success.classList.add('show');
+          e.target.reset();
+        } else {
+          throw new Error('Respuesta no OK: ' + res.status);
+        }
+      } catch (err) {
+        error.classList.add('show');
+        console.error('Form error:', err);
+      } finally {
+        btn.disabled          = false;
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+      }
+    }
+    function openCart() { document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open'); document.body.style.overflow = ''; }
+    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); document.getElementById('mobile-overlay').classList.toggle('open'); }
+    function closeMobileMenu() { document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('mobile-overlay').classList.remove('open'); }
+
+    // Cerrar search dropdown al hacer click fuera
+    document.addEventListener('click', function(e) {
+      const sd = document.getElementById('search-dropdown');
+      if (sd && sd.classList.contains('open') && !e.target.closest('.search-wrapper')) {
+        sd.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>
